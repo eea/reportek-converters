@@ -23,14 +23,10 @@ def home():
 def convert(name):
     document = flask.request.files.get('file', '')
     with tempfile.NamedTemporaryFile() as tmp:
-        pos = 0
-        size = 10
-        chunk = document.stream.read(size)
+        chunk = True
         while chunk:
+            chunk = document.stream.read(10)
             tmp.file.write(chunk)
-            pos+=size
-            tmp.seek(pos)
-            chunk = document.stream.read(size)
         tmp.file.flush()
         tmp.file.seek(0)
         try:
