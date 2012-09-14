@@ -26,3 +26,10 @@ class WebTest(unittest.TestCase):
         data['file'] = (StringIO("file data"), 'file.rar')
         resp = self.client.post("/convert/rar2list", data=data)
         self.assertEqual(200, resp.status_code)
+
+    def test_rar2list_with_real_file(self):
+        data = {}
+        with file('tests/rar_data/onefile.rar') as f:
+            data['file'] = (f, 'onefile.rar')
+            resp = self.client.post("/convert/rar2list", data=data)
+            self.assertIn('fisier.txt', resp.data)
