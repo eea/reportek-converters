@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 import subprocess
 
+converters = {'list_7zip': ['7za', 'l'],
+              'rar2list': ['unrar', 'l'],
+             }
 
-def call(converter, filename):
-    if converter == 'list_7zip':
-        return subprocess.check_output(['7za', 'l', filename])
-    elif converter == 'rar2list':
-        return subprocess.check_output(['unrar', 'l', filename])
+def list_converters(self):
+    return converters.keys()
+
+def call(converter_id, filename):
+    command = converters.get(converter_id, None)
+    if command:
+        return subprocess.check_output(command + [filename])
     else:
         raise NotImplementedError
