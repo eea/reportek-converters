@@ -3,7 +3,7 @@ import flask
 import flask.ext.script
 import tempfile
 
-from convert import call
+from convert import call, list_converters, list_converters_params
 
 web = flask.Blueprint("web", __name__)
 
@@ -17,6 +17,15 @@ def create_app():
 @web.route("/")
 def home():
     return 'Reportek converters'
+
+@web.route("/list")
+def available_converters():
+    return flask.jsonify({'list': list_converters()})
+
+
+@web.route("/params")
+def converters_params():
+    return flask.jsonify({'list': list_converters_params()})
 
 
 @web.route("/convert/<string:name>", methods=["POST"])

@@ -15,6 +15,35 @@ class WebTest(unittest.TestCase):
         resp = self.client.get("/")
         self.assertEqual(200, resp.status_code)
 
+    def test_converters_list(self):
+        resp = self.client.get("/list")
+        import json
+        self.assertIn('rar2list', json.loads(resp.data)['list'])
+
+    def test_converters_params(self):
+        """
+        Converter params:
+            id, title, convert_url, ct_input,
+            ct_output, ct_schema, ct_extraparams,
+            description, suffix
+        """
+        with self.app.test_request_context():
+            resp = self.client.get("/params")
+            import json
+            self.assertEqual(
+                ['http_rar2list', #id
+                 'List of contents', #title
+                 '', #convert_url
+                 'application/x-rar-compressed', #ct_input
+                 'text/plain;charset="utf-8"', #ct_output
+                 '', #ct_schema
+                 [], #ct_extraparams
+                 '', #description
+                 ''], #suffix
+                json.loads(resp.data)['list'][0]
+            )
+
+
     def test_unknown_converter(self):
         data = {}
         data['file'] = (StringIO("file data"), 'file.unk')
