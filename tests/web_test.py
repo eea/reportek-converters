@@ -31,9 +31,9 @@ class WebTest(unittest.TestCase):
             resp = self.client.get("/params")
             import json
             self.assertEqual(
-                ['http_rar2list', #id
+                ['%srar2list' %self.app.config.get('PREFIX', ''), #id
                  'List of contents', #title
-                 '', #convert_url
+                 '/convert/rar2list', #convert_url
                  'application/x-rar-compressed', #ct_input
                  'text/plain;charset="utf-8"', #ct_output
                  '', #ct_schema
@@ -42,7 +42,9 @@ class WebTest(unittest.TestCase):
                  ''], #suffix
                 json.loads(resp.data)['list'][0]
             )
-
+        prefix = self.app.config.get('PREFIX', None)
+        if prefix:
+            self.assertIn(prefix, json.loads(resp.data).get('prefix'))
 
     def test_unknown_converter(self):
         data = {}

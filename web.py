@@ -10,6 +10,7 @@ web = flask.Blueprint("web", __name__)
 
 def create_app():
     app = flask.Flask(__name__)
+    app.config.from_pyfile("settings.py", silent=True)
     app.register_blueprint(web)
     return app
 
@@ -25,16 +26,23 @@ def available_converters():
 
 @web.route("/params")
 def converters_params():
-    return flask.jsonify({'list': list_converters_params()})
+    response = {'list': list_converters_params()}
+    prefix =  flask.current_app.config.get('PREFIX', None)
+    if prefix:
+        response.update({'prefix': prefix})
+    return flask.jsonify(response)
 
 
 @web.route("/convert/<string:name>", methods=["POST"])
 def convert(name):
-    document = flask.request.files.get('file', '')
+    document = getattr(flask.request.files.get('file', ''), 'stream', None)
+    if not document:
+        import StringIO
+        document = StringIO.StringIO(flask.request.data)
     with tempfile.NamedTemporaryFile() as tmp:
         chunk = True
         while chunk:
-            chunk = document.stream.read(10)
+            chunk = document.read(10)
             tmp.file.write(chunk)
         tmp.file.flush()
         tmp.file.seek(0)

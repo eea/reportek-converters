@@ -6,8 +6,8 @@ from utils import mime_type
 class ConvertTest(unittest.TestCase):
 
     def test_convert_object(self):
-        converter = Converter('http_rar2list', 'unrar l %s', mime_type('rar'))
-        self.assertEqual('http_rar2list', converter.name)
+        converter = Converter('rar2list', 'unrar l %s', mime_type('rar'))
+        self.assertEqual('rar2list', converter.name)
         self.assertEqual('unrar l %s', converter.command)
         self.assertEqual(["application/x-rar-compressed"],
                          converter.accepted_content_types)

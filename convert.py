@@ -49,10 +49,12 @@ def list_converters_params():
     results = []
     app = flask.current_app
     for conv in converters.values():
+        name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
+                                       name = conv.name)
         results.append(
-            ['http_%s' %conv.name, #id
+            [name, #id
              conv.title, #title
-             '', #convert_url
+             '/convert/%s' %conv.name, #convert_url
              conv.ct_input, #ct_input
              conv.ct_output, #ct_output
              conv.ct_schema, #ct_schema
