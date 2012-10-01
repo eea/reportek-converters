@@ -17,7 +17,11 @@ class Converter(object):
         self.command = command
         self.accepted_content_types = accepted_content_types #lista
         self.returned_content_type = returned_content_type
-        self.__compatibility__init__(title, ct_schema, ct_extraparams, description, ct_suffix)
+        self.__compatibility__init__(title,
+                                     ct_schema,
+                                     ct_extraparams,
+                                     description,
+                                     ct_suffix)
 
 
     def __compatibility__init__(self, title, ct_schema, ct_extraparams, description, ct_suffix):
@@ -37,9 +41,8 @@ class Converter(object):
 
 
 
-converters = {'list_7zip': Converter('list_7zip', '7za l %s', mime_type('7z')),
+converters = {'list_7zip': Converter('list_7zip', '7za l %s', mime_type('7z'), title='List of contents'),
               'rar2list': Converter('rar2list', 'unrar l %s', mime_type('rar'), title='List of contents')}
-
 
 def list_converters():
     return converters.keys()
@@ -54,7 +57,7 @@ def list_converters_params():
         results.append(
             [name, #id
              conv.title, #title
-             '/convert/%s' %conv.name, #convert_url
+             'convert/%s' %(conv.name), #convert_url
              conv.ct_input, #ct_input
              conv.ct_output, #ct_output
              conv.ct_schema, #ct_schema

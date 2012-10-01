@@ -2,6 +2,8 @@
 
    "323": ["text/h323"],
 
+   "7z": ["application/x-7z-compressed"],
+
    "*": ["application/octet-stream"],
 
    "acx": ["application/internet-property-stream"],

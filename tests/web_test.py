@@ -33,7 +33,7 @@ class WebTest(unittest.TestCase):
             self.assertEqual(
                 ['%srar2list' %self.app.config.get('PREFIX', ''), #id
                  'List of contents', #title
-                 '/convert/rar2list', #convert_url
+                 'convert/rar2list', #convert_url
                  'application/x-rar-compressed', #ct_input
                  'text/plain;charset="utf-8"', #ct_output
                  '', #ct_schema
