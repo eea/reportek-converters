@@ -55,7 +55,7 @@ def convert(name):
             return flask.Response(response, direct_passthrough=True, content_type="application/octet-stream")
 
 
-manager = flask.ext.script.Manager(create_app())
+app = create_app()
+manager = flask.ext.script.Manager(app)
 if __name__ == "__main__":
     manager.run()
-
