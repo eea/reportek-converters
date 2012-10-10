@@ -64,3 +64,11 @@ class WebTest(unittest.TestCase):
             data['file'] = (f, 'onefile.rar')
             resp = self.client.post("/convert/rar2list", data=data)
             self.assertIn('fisier.txt', resp.data)
+
+    def test_pdftohtml(self):
+        data = {}
+        with file('tests/pdf_data/sample.pdf') as f:
+            data['file'] = (f, 'sample.pdf')
+            resp = self.client.post("/convert/pdftohtml", data=data)
+            self.assertIn('Flask&#160;Documentation', resp.data)
+
