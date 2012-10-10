@@ -18,4 +18,3 @@ class ConvertTest(unittest.TestCase):
         from convert import converters
         converter = Converter('rar2list', 'unrar l %s', mime_type('rar'))
         self.assertEqual(converter.command, converters['rar2list'].command)
-

@@ -30,7 +30,7 @@ class WebTest(unittest.TestCase):
         with self.app.test_request_context():
             resp = self.client.get("/params")
             import json
-            self.assertEqual(
+            self.assertIn(
                 ['%srar2list' %self.app.config.get('PREFIX', ''), #id
                  'List of contents (%s)' %self.app.config.get('TAG', ''), #title
                  'convert/rar2list', #convert_url
@@ -40,7 +40,7 @@ class WebTest(unittest.TestCase):
                  [], #ct_extraparams
                  '', #description
                  ''], #suffix
-                json.loads(resp.data)['list'][0]
+                json.loads(resp.data)['list']
             )
         prefix = self.app.config.get('PREFIX', None)
         if prefix:

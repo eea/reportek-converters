@@ -1,0 +1,258 @@
+[
+    [
+        "msxls2html",
+        "timeout 30s xlhtml -fw -m  %s",
+        [
+            "application/msexcel"
+        ],
+        "Show MS-Excel as simple HTML table"
+    ],
+    [
+        "vndmsxls2html",
+        "timeout 30s xlhtml -fw -m -te %s",
+        [
+            "application/vnd.ms-excel"
+        ],
+        "Show MS-Excel as simple HTML table (files over 1MB might freeze your browser)"
+    ],
+    [
+        "xsl2html",
+        "timeout 30s xlhtml -fw -m  %s",
+        [
+            "application/excel"
+        ],
+        "Show MS-Excel as simple HTML table"
+    ],
+    [
+        "msppt2html",
+        "ppthtml %s",
+        [
+            "application/mspowerpoint"
+        ],
+        "Show Powerpoint as HTML"
+    ],
+    [
+        "ppt2html",
+        "ppthtml %s",
+        [
+            "application/powerpoint"
+        ],
+        "Show Powerpoint as HTML"
+    ],
+    [
+        "vndmsppt2html",
+        "ppthtml %s",
+        [
+            "application/vnd.ms-powerpoint"
+        ],
+        "Show Powerpoint as HTML"
+    ],
+    [
+        "ziplist",
+        "unzip -l %s",
+        [
+            "application/x-zip-compressed"
+        ],
+        "List of contents"
+    ],
+    [
+        "msword2text",
+        "wvWare --dir=tmp --config=wvText.xml %s",
+        [
+            "application/msword"
+        ],
+        "Show as simple text"
+    ],
+    [
+        "accesstables",
+        "mdb-tables -1 %s",
+        [
+            "application/msaccess"
+        ],
+        "Show list of tables"
+    ],
+    [
+        "msword2html",
+        "wvWare --dir=tmp --config=wvHtml.xml %s",
+        [
+            "application/msword"
+        ],
+        "Show MS-Word as HTML"
+    ],
+    [
+        "ziplist2",
+        "unzip -l %s",
+        [
+            "application/zip"
+        ],
+        "List of contents"
+    ],
+    [
+        "pdftohtml",
+        "pdftohtml -noframes -stdout -i -q -enc UTF-8  %s",
+        [
+            "application/pdf"
+        ],
+        "Show PDF as HTML"
+    ],
+    [
+        "odt2html",
+        "unzip -p %s content.xml | xsltproc /var/local/cdr/converters/odt_to_xhtml.xsl -",
+        [
+            "application/vnd.oasis.opendocument.text"
+        ],
+        "Show as HTML"
+    ],
+    [
+        "ods2html",
+        "unzip -p %s content.xml | xsltproc /var/local/cdr/converters/ods_to_xhtml.xsl -",
+        [
+            "application/vnd.oasis.opendocument.spreadsheet"
+        ],
+        "Show as HTML"
+    ],
+    [
+        "flash_ext_png",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/flash_ext_png.py --gml %s --minx %s --miny %s --maxx %s --maxy %s --server %s --service %s",
+        [
+            "text/xml"
+        ],
+        "Flash print extension"
+    ],
+    [
+        "gmltoflash",
+        "flash_document",
+        [
+            "text/xml"
+        ],
+        "Display map in GIS viewer (Macromedia Flash)"
+    ],
+    [
+        "gmltoshp",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_shp.py --gml %s --schema %s",
+        [
+            "text/xml"
+        ],
+        "Download map as zipped ESRI shape files"
+    ],
+    [
+        "gmltokml",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_kml.py --gml %s",
+        [
+            "text/xml"
+        ],
+        "Display map in Google Earth viewer"
+    ],
+    [
+        "gmltopng_thumb_bg",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_thumbnail_bg.py --gml %s --country %s",
+        [
+            "text/xml"
+        ],
+        "View map as PNG image (thumbnail with background)"
+    ],
+    [
+        "gmltopng",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png.py --gml %s",
+        [
+            "text/xml"
+        ],
+        "View map as PNG image without background"
+    ],
+    [
+        "gmltopng_thumb",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_thumbnail.py --gml %s",
+        [
+            "text/xml"
+        ],
+        "View map as PNG image (thumbnail without background)"
+    ],
+    [
+        "gmltopng_bg",
+        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_bg.py --gml %s --country %s",
+        [
+            "text/xml"
+        ],
+        "View map as PNG image with background"
+    ],
+    [
+        "rar2list",
+        "unrar l %s",
+        [
+            "application/x-rar-compressed"
+        ],
+        "List of contents"
+    ],
+    [
+        "rar2list2",
+        "unrar l %s",
+        [
+            "application/rar"
+        ],
+        "List of contents"
+    ],
+    [
+        "dbf_as_html",
+        "/var/local/cdr/converters/dbf_as_html %s",
+        [
+            "application/x-dbf"
+        ],
+        "Show as HTML"
+    ],
+    [
+        "prj_as_html",
+        "/var/local/cdr/converters/prj_as_html %s",
+        [
+            "application/x-prj"
+        ],
+        "Show formatted"
+    ],
+    [
+        "list_7zip",
+        "7za l %s",
+        [
+            "application/x-7zip"
+        ],
+        "List of contents"
+    ],
+    [
+        "txt_to_wkt",
+        "awk -f /var/local/cdr/converters/scripts/txt_to_wkt.awk %s",
+        [
+            "application/x-prj"
+        ],
+        "Show formatted Well Known Text"
+    ],
+    [
+        "shp2kml",
+        "/var/local/cdr/converters/shp_to_kml.sh %s",
+        [
+            "application/x-shp"
+        ],
+        "Convert shapefile to OGC KML 2.2"
+    ],
+    [
+        "shp_info",
+        "ogrinfo -al -so %s",
+        [
+            "application/x-shp"
+        ],
+        "Show shapefile metadata"
+    ],
+    [
+        "shp2img",
+        "/var/local/cdr/converters/shp_to_img.sh %s",
+        [
+            "application/x-shp"
+        ],
+        "Show shapefile as image"
+    ],
+    [
+        "SHP2img",
+        "/var/local/cdr/converters/shp_to_img.sh %s",
+        [
+            "application/x-shp"
+        ],
+        "Show Shapefile as image"
+    ]
+]

@@ -1,7 +1,85 @@
 #!/usr/bin/env python
 import flask
+import json
 import subprocess
+from path import path
 from utils import mime_type
+
+
+def init_converters():
+    config_path = path(__file__).parent.abspath() / 'config'
+    params = json.loads((config_path / 'converters.json').bytes())
+    return {conv[0]: Converter(*conv[0:3], title=conv[3]) for conv in params}
+
+
+def list_converters():
+    return converters.keys()
+
+
+def list_converters_params():
+    results = []
+    app = flask.current_app
+    for conv in init_converters().values():
+        name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
+                                       name = conv.name)
+        title = '{title} {tag}'.format(title=conv.title,
+                                       tag='(%s)' %app.config.get('TAG', ''))
+        results.append(
+            [name, #id
+             title, #title
+             'convert/%s' %(conv.name), #convert_url
+             conv.ct_input, #ct_input
+             conv.ct_output, #ct_output
+             conv.ct_schema, #ct_schema
+             conv.ct_extraparams, #ct_extraparams
+             conv.description, #description
+             conv.suffix] #suffix
+        )
+    return results
+
+
+def call(converter_id, filename):
+    converter = init_converters().get(converter_id, None)
+    if converter:
+        command = converter.command
+        return subprocess.check_output(command.format(filename=filename), shell=True)
+    else:
+        raise NotImplementedError
+
+
+def list_converters():
+    return converters.keys()
+
+
+def list_converters_params():
+    results = []
+    app = flask.current_app
+    for conv in converters.values():
+        name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
+                                       name = conv.name)
+        title = '{title} {tag}'.format(title=conv.title,
+                                       tag='(%s)' %app.config.get('TAG', ''))
+        results.append(
+            [name, #id
+             title, #title
+             'convert/%s' %(conv.name), #convert_url
+             conv.ct_input, #ct_input
+             conv.ct_output, #ct_output
+             conv.ct_schema, #ct_schema
+             conv.ct_extraparams, #ct_extraparams
+             conv.description, #description
+             conv.suffix] #suffix
+        )
+    return results
+
+
+def call(converter_id, filename):
+    converter = converters.get(converter_id, None)
+    if converter:
+        command = converter.command
+        return subprocess.check_output(command %filename, shell=True)
+    else:
+        raise NotImplementedError
 
 
 class Converter(object):
@@ -40,47 +118,4 @@ class Converter(object):
         self.suffix = ''
 
 
-
-converters = {
-    'list_7zip': Converter('list_7zip',
-                           '7za l %s',
-                           mime_type('7z'),
-                           title='List of contents'),
-    'rar2list': Converter('rar2list',
-                          'unrar l %s',
-                          mime_type('rar'),
-                          title='List of contents')
-}
-
-def list_converters():
-    return converters.keys()
-
-
-def list_converters_params():
-    results = []
-    app = flask.current_app
-    for conv in converters.values():
-        name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
-                                       name = conv.name)
-        title = '{title} {tag}'.format(title=conv.title,
-                                       tag='(%s)' %app.config.get('TAG', ''))
-        results.append(
-            [name, #id
-             title, #title
-             'convert/%s' %(conv.name), #convert_url
-             conv.ct_input, #ct_input
-             conv.ct_output, #ct_output
-             conv.ct_schema, #ct_schema
-             conv.ct_extraparams, #ct_extraparams
-             conv.description, #description
-             conv.suffix] #suffix
-        )
-    return results
-
-def call(converter_id, filename):
-    converter = converters.get(converter_id, None)
-    if converter:
-        command = converter.command
-        return subprocess.check_output(command %filename, shell=True)
-    else:
-        raise NotImplementedError
+converters = init_converters()
