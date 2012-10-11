@@ -97,7 +97,7 @@
     ],
     [
         "odt2html",
-        "unzip -p %s content.xml | xsltproc /var/local/cdr/converters/odt_to_xhtml.xsl -",
+        "unzip -p %s content.xml | xsltproc ./bin/converters/odt_to_xhtml.xsl -",
         [
             "application/vnd.oasis.opendocument.text"
         ],
@@ -105,7 +105,7 @@
     ],
     [
         "ods2html",
-        "unzip -p %s content.xml | xsltproc /var/local/cdr/converters/ods_to_xhtml.xsl -",
+        "unzip -p %s content.xml | xsltproc ./bin/converters/ods_to_xhtml.xsl -",
         [
             "application/vnd.oasis.opendocument.spreadsheet"
         ],
@@ -113,7 +113,7 @@
     ],
     [
         "flash_ext_png",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/flash_ext_png.py --gml %s --minx %s --miny %s --maxx %s --maxy %s --server %s --service %s",
+        "python ./bin/flash_ext_png.py --gml %s --minx %s --miny %s --maxx %s --maxy %s --server %s --service %s",
         [
             "text/xml"
         ],
@@ -129,7 +129,7 @@
     ],
     [
         "gmltoshp",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_shp.py --gml %s --schema %s",
+        "python ./bin/gml_to_shp.py --gml %s --schema %s",
         [
             "text/xml"
         ],
@@ -137,7 +137,7 @@
     ],
     [
         "gmltokml",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_kml.py --gml %s",
+        "python ./bin/gml_to_kml.py --gml %s",
         [
             "text/xml"
         ],
@@ -145,7 +145,7 @@
     ],
     [
         "gmltopng_thumb_bg",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_thumbnail_bg.py --gml %s --country %s",
+        "python ./bin/gml_to_png_thumbnail_bg.py --gml %s --country %s",
         [
             "text/xml"
         ],
@@ -153,7 +153,7 @@
     ],
     [
         "gmltopng",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png.py --gml %s",
+        "python ./bin/gml_to_png.py --gml %s",
         [
             "text/xml"
         ],
@@ -161,7 +161,7 @@
     ],
     [
         "gmltopng_thumb",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_thumbnail.py --gml %s",
+        "python ./bin/gml_to_png_thumbnail.py --gml %s",
         [
             "text/xml"
         ],
@@ -169,7 +169,7 @@
     ],
     [
         "gmltopng_bg",
-        "python /var/local/cdr/products/Reportek_dependencies/GML/gml_to_png_bg.py --gml %s --country %s",
+        "python ./bin/gml_to_png_bg.py --gml %s --country %s",
         [
             "text/xml"
         ],
@@ -193,7 +193,7 @@
     ],
     [
         "dbf_as_html",
-        "/var/local/cdr/converters/dbf_as_html %s",
+        "./bin/converters/dbf_as_html %s",
         [
             "application/x-dbf"
         ],
@@ -201,7 +201,7 @@
     ],
     [
         "prj_as_html",
-        "/var/local/cdr/converters/prj_as_html %s",
+        "./bin/converters/prj_as_html %s",
         [
             "application/x-prj"
         ],
@@ -217,7 +217,7 @@
     ],
     [
         "txt_to_wkt",
-        "awk -f /var/local/cdr/converters/scripts/txt_to_wkt.awk %s",
+        "awk -f ./bin/converters/scripts/txt_to_wkt.awk %s",
         [
             "application/x-prj"
         ],
@@ -225,7 +225,7 @@
     ],
     [
         "shp2kml",
-        "/var/local/cdr/converters/shp_to_kml.sh %s",
+        "./bin/converters/shp_to_kml.sh %s",
         [
             "application/x-shp"
         ],
@@ -241,7 +241,7 @@
     ],
     [
         "shp2img",
-        "/var/local/cdr/converters/shp_to_img.sh %s",
+        "./bin/converters/shp_to_img.sh %s",
         [
             "application/x-shp"
         ],
@@ -249,7 +249,7 @@
     ],
     [
         "SHP2img",
-        "/var/local/cdr/converters/shp_to_img.sh %s",
+        "./bin/converters/shp_to_img.sh %s",
         [
             "application/x-shp"
         ],

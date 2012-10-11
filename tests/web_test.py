@@ -72,3 +72,9 @@ class WebTest(unittest.TestCase):
             resp = self.client.post("/convert/pdftohtml", data=data)
             self.assertIn('Flask&#160;Documentation', resp.data)
 
+    def test_gmltopng_thumb(self):
+        data = {}
+        with file('tests/gml_data/world.gml') as f:
+            data['file'] = (f, 'onefile.rar')
+            resp = self.client.post("/convert/gmltopng_thumb", data=data)
+            self.assertIn('PNG', resp.data)

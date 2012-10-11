@@ -35,6 +35,8 @@ def converters_params():
 
 @web.route("/convert/<string:name>", methods=["POST"])
 def convert(name):
+    if name == 'list_7zip':
+        import pdb; pdb.set_trace()
     document = getattr(flask.request.files.get('file', ''), 'stream', None)
     if not document:
         import StringIO
@@ -46,11 +48,12 @@ def convert(name):
             tmp.file.write(chunk)
         tmp.file.flush()
         tmp.file.seek(0)
+        import subprocess
         try:
             response = call(name, tmp.name)
-        except:
+        except subprocess.CalledProcessError as exp:
             #TODO return error response
-            raise NotImplementedError
+            raise exp
         else:
             return flask.Response(response, direct_passthrough=True, content_type="application/octet-stream")
 
