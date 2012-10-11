@@ -1,0 +1,180 @@
+#!/bin/bash
+
+# Check codes in WFD Art. 13 deliveries: XML data vs shapefiles
+# The code mapping between XML data and shapefiles is
+# --------------------------------------------------
+# ID  Element in XML          Attribute in shapefile
+# --------------------------------------------------
+# PA  EUProtectedAreaCode        EU_CD_PA
+# CW  EUSurfaceWaterBodyCode     EU_CD_CW
+# LW  EUSurfaceWaterBodyCode     EU_CD_LW
+# RW  EUSurfaceWaterBodyCode     EU_CD_RW
+# TW  EUSurfaceWaterBodyCode     EU_CD_TW
+# GW  EUGroundWaterBodyCode      EU_CD_GW
+# RB  EURBDCode                  EU_CD_RB
+# SU  EUSubUnitCode              EU_CD_SU
+# --------------------------------------------------
+#
+# Hermann, March 2010
+
+DATE=$(date '+%Y%m%d_%H%M')
+
+cd /home/peifer/wfdart13 || {
+	printf "Error: Cannot change to working directory\n" > log_$DATE
+	exit 1
+}
+
+wget -N -o download.log "http://water.eionet.europa.eu/schemas/dir200060ec/resources/checklist.txt"
+
+NEW=$(grep -c checklist.txt.*saved download.log)
+
+if [[ -s checklist.txt && $NEW > 0 ]] ; then
+
+	/home/peifer/local/bin/xgawk 'NF == 3 {
+		gsub("http://cdr.eionet.europa.eu", "/var/local/cdr_all/cdr/var/reposit")
+		print }' checklist.txt |
+
+	while read id file_xml file_dbf
+	do
+		/home/peifer/local/bin/xgawk -v id="$id" -v file_xml="$file_xml" -v file_dbf="$file_dbf" '
+
+		BEGIN {
+			# Field separator for XML file
+			FS = "[<>]"
+
+			# Code mapping
+			code_dbf  =	"EU_CD_" id
+			code_xml  =	id == "PA" ? "EUProtectedAreaCode" :
+					id ~ /^(C|L|R|T)W$/ ? "EUSurfaceWaterBodyCode" :
+					id == "GW" ? "EUGroundWaterBodyCode" :
+					id == "RB" ? "EURBDCode" :
+					id == "SU" ? "EUSubUnitCode" : ""
+
+			# PA_TYPE check: legal values
+			split("BA BI FI SH HA NI UW A7 EU NA LO", PA, " " )
+				for (i in PA)
+					PA_TYPE[PA[i]]
+
+			# GW HORIZON check: legal values
+			split("1 2 3 4", HO, " " )
+				for (i in HO)
+					HO_TYPE[HO[i]]
+
+			# RW CONTINUA check: legal values
+			split("Y N L R T C V", CO, " " )
+				for (i in CO)
+					CO_TYPE[CO[i]]
+
+		}
+
+		# Remember IDs in XML file
+		NR == FNR {
+	 		if ( $2 ~ code_xml )
+				XML[$3]
+			next
+		}
+
+		# Field separator for DBF file
+		FNR == 1 { FS = " " }
+
+		# Remember IDs in DBF file
+		$1 ~ code_dbf ":" { DBF[$2] }
+
+		# Additional check of PA_TYPE for protected areas dbf
+		id == "PA" && $1 == "PA_TYPE:" && ! ($2 in PA_TYPE) {
+			PA_ERR[$2]++
+		}
+
+		# Additional check of HORIZON for groundwater bodies dbf
+		id == "GW" && $1 == "HORIZON:" && ! ($2 in HO_TYPE) {
+			HO_ERR[$2]++
+		}
+
+		# Additional check of CONTINUA for river water bodies dbf
+		id == "SW" && $1 == "CONTINUA:" && ! ($2 in CO_TYPE) {
+			CO_ERR[$2]++
+		}
+
+		# Make some simple test
+		END {
+			gsub("/var/local/cdr_all/cdr/var/reposit", "http://cdr.eionet.europa.eu", file_xml )
+			gsub("/var/local/cdr_all/cdr/var/reposit", "http://cdr.eionet.europa.eu", file_dbf )
+
+			print ORS "Checking results for:"
+
+			print file_xml
+			print file_dbf
+			print ""
+
+			if (id == "PA" && length(PA_ERR)) {
+
+				print "Undefined PA_TYPE values found:"
+
+				for (i in PA_ERR)
+					printf "%8d occurrences of \"%s\"\n", PA_ERR[i], i
+
+				print ""
+			}
+
+			if (id == "GW" && length(HO_ERR)) {
+
+				print "Undefined HORIZON values found:"
+
+				for (i in HO_ERR)
+					printf "%8d occurrences of \"%s\"\n", HO_ERR[i], i
+
+				print ""
+			}
+
+			if (id == "SW" && length(CO_ERR)) {
+
+				print "Undefined CONTINUA values found:"
+
+				for (i in CO_ERR)
+					printf "%8d occurrences of \"%s\"\n", CO_ERR[i], i
+
+				print ""
+			}
+
+			print  "Code values in XML data and shapefiles:"
+			printf "%8d unique %s values in XML data\n",  length(XML), code_xml
+			printf "%8d unique %s values in shapefile\n", length(DBF), code_dbf
+
+			for (i in DBF)
+				if ( !(i in XML) ) {
+					c++
+					missing = missing sep sprintf("%8d", c) " " i
+					sep = ORS
+				}
+
+			if ( ! (length(XML) + length(DBF)) )
+				printf "\nNo code values found in either file\n"
+
+			else if ( ! length(XML) )
+				printf "\nNo %s values found in XML data\n", code_xml
+
+			else if ( ! length(DBF) )
+				printf "\nNo %s values found in shapefile\n", code_dbf
+
+			else if ( c )
+				printf "\n%8d %s %s %s %s\n\n%s\n", c, code_dbf,
+				"values from shapefile NOT found as", code_xml,
+				"values in XML data", missing
+
+			else
+				 print ORS "All code values from shapefile found in XML data" ORS
+
+		}' <( xmllint --format "$file_xml" ) <( ~/local/bin/dbfdump -m "$file_dbf" )
+
+	done | tee log_$DATE |
+
+	# mail HelpdeskWFD@atkinsglobal.com -s "WFD Art. 13 checking results $DATE" 2>&1
+	# mail HelpdeskWFD@atkinsglobal.com -c hermann.peifer@eea.europa.eu -s "WFD Art. 13 checking results $DATE" 2>&1
+	mail hermann.peifer@eea.europa.eu -s "WFD Art. 13 checking results $DATE" 2>&1
+
+else
+	printf "Nothing to do: remote file empty or no newer than local file\n" > log_$DATE
+fi
+
+exit 0
+

@@ -64,9 +64,6 @@ class WebTest(unittest.TestCase):
     def test_rar2list(self):
         self.assertInResponse('fisier.txt', 'tests/rar_data/onefile.rar')
 
-    def test_pdftohtml(self):
-        self.assertInResponse('Flask&#160;Documentation', 'tests/pdf_data/sample.pdf')
-
     def test_gmltopng_thumb(self):
         self.assertInResponse('PNG', 'tests/gml_data/world.gml')
 
@@ -87,3 +84,22 @@ class WebTest(unittest.TestCase):
 
     def test_ziplist(self):
         self.assertInResponse('fisier.txt', 'tests/zip_data/test.zip')
+
+    def test_msword2text(self):
+        self.assertInResponse('test .doc file', 'tests/doc_data/test.doc')
+
+    def test_accesstables(self):
+        self.assertInResponse('Purchases', 'tests/mdb_data/test.mdb')
+
+    def test_msword2html(self):
+        self.assertInResponse('test .doc file', 'tests/doc_data/test.doc')
+
+    def test_ziplist2(self):
+        self.assertInResponse('fisier.txt', 'tests/zip_data/test.zip')
+
+    def test_pdftohtml(self):
+        self.assertInResponse('Flask&#160;Documentation', 'tests/pdf_data/sample.pdf')
+
+    def test_odt2html(self):
+        self.assertInResponse('test .odt file', 'tests/odt_data/test.odt')
+

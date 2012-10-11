@@ -1,0 +1,10 @@
+#!/bin/bash
+# Run a program for at most 30 seconds
+
+/usr/bin/timeout 30s $@
+
+
+#$@ &
+#childpid=$!
+#sleep 30
+#kill -s SIGTERM $childpid

@@ -1,0 +1,40 @@
+#!/usr/local/bin/python
+import sys
+
+if len(sys.argv) != 2:
+    print "Needs a filename"
+    sys.exit(2)
+
+prj = open(sys.argv[1],"rb")
+
+print """<html>
+<head>
+<title>Display %s as HTML</title>
+</head>
+<body>""" % sys.argv[1]
+
+ispcs = "    "
+prjdata = prj.read()
+print """<pre>"""
+indent = 0
+for c in list(prjdata):
+    if c == '[':
+	sys.stdout.write(c)
+        indent += 1
+        sys.stdout.write("\n")
+        sys.stdout.write(ispcs * indent)
+    elif c == ']':
+        indent -= 1
+        sys.stdout.write("\n")
+        sys.stdout.write(ispcs * indent)
+	sys.stdout.write(c)
+    elif c == ',':
+	sys.stdout.write(c)
+        sys.stdout.write("\n")
+        sys.stdout.write(ispcs * indent)
+    else:
+	sys.stdout.write(c)
+#print prjdata.replace('],','],\n')
+print """</pre>"""
+print """</body>
+</html>"""
