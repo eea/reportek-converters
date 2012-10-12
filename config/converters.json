@@ -1,7 +1,7 @@
 [
     [
         "msxls2html",
-        "timeout 30s xlhtml -fw -m  %s",
+        "timeout 30s xlhtml -fw -m  {0}",
         [
             "application/msexcel"
         ],
@@ -9,7 +9,7 @@
     ],
     [
         "vndmsxls2html",
-        "timeout 30s xlhtml -fw -m -te %s",
+        "timeout 30s xlhtml -fw -m -te {0}",
         [
             "application/vnd.ms-excel"
         ],
@@ -17,7 +17,7 @@
     ],
     [
         "xsl2html",
-        "timeout 30s xlhtml -fw -m  %s",
+        "timeout 30s xlhtml -fw -m  {0}",
         [
             "application/excel"
         ],
@@ -25,7 +25,7 @@
     ],
     [
         "msppt2html",
-        "ppthtml %s",
+        "ppthtml {0}",
         [
             "application/mspowerpoint"
         ],
@@ -33,7 +33,7 @@
     ],
     [
         "ppt2html",
-        "ppthtml %s",
+        "ppthtml {0}",
         [
             "application/powerpoint"
         ],
@@ -41,7 +41,7 @@
     ],
     [
         "vndmsppt2html",
-        "ppthtml %s",
+        "ppthtml {0}",
         [
             "application/vnd.ms-powerpoint"
         ],
@@ -49,7 +49,7 @@
     ],
     [
         "ziplist",
-        "unzip -l %s",
+        "unzip -l {0}",
         [
             "application/x-zip-compressed"
         ],
@@ -57,7 +57,7 @@
     ],
     [
         "msword2text",
-        "wvWare --dir=tmp --config=wvText.xml %s",
+        "wvWare --dir=tmp --config=wvText.xml {0}",
         [
             "application/msword"
         ],
@@ -65,7 +65,7 @@
     ],
     [
         "accesstables",
-        "mdb-tables -1 %s",
+        "mdb-tables -1 {0}",
         [
             "application/msaccess"
         ],
@@ -73,7 +73,7 @@
     ],
     [
         "msword2html",
-        "wvWare --dir=tmp --config=wvHtml.xml %s",
+        "wvWare --dir=tmp --config=wvHtml.xml {0}",
         [
             "application/msword"
         ],
@@ -81,7 +81,7 @@
     ],
     [
         "ziplist2",
-        "unzip -l %s",
+        "unzip -l {0}",
         [
             "application/zip"
         ],
@@ -89,7 +89,7 @@
     ],
     [
         "pdftohtml",
-        "pdftohtml -noframes -stdout -i -q -enc UTF-8  %s",
+        "pdftohtml -noframes -stdout -i -q -enc UTF-8  {0}",
         [
             "application/pdf"
         ],
@@ -97,7 +97,7 @@
     ],
     [
         "odt2html",
-        "unzip -p %s content.xml | xsltproc ./bin/converters/odt_to_xhtml.xsl -",
+        "unzip -p {0} content.xml | xsltproc ./bin/converters/odt_to_xhtml.xsl -",
         [
             "application/vnd.oasis.opendocument.text"
         ],
@@ -105,7 +105,7 @@
     ],
     [
         "ods2html",
-        "unzip -p %s content.xml | xsltproc ./bin/converters/ods_to_xhtml.xsl -",
+        "unzip -p {0} content.xml | xsltproc ./bin/converters/ods_to_xhtml.xsl -",
         [
             "application/vnd.oasis.opendocument.spreadsheet"
         ],
@@ -113,7 +113,7 @@
     ],
     [
         "flash_ext_png",
-        "python ./bin/flash_ext_png.py --gml %s --minx %s --miny %s --maxx %s --maxy %s --server %s --service %s",
+        "python ./bin/flash_ext_png.py --gml {0} --minx {1} --miny {2} --maxx {3} --maxy {4} --server {5} --service {6}",
         [
             "text/xml"
         ],
@@ -129,7 +129,7 @@
     ],
     [
         "gmltoshp",
-        "python ./bin/gml_to_shp.py --gml %s --schema %s",
+        "python ./bin/gml_to_shp.py --gml {0} --schema {0}",
         [
             "text/xml"
         ],
@@ -137,7 +137,7 @@
     ],
     [
         "gmltokml",
-        "python ./bin/gml_to_kml.py --gml %s",
+        "python ./bin/gml_to_kml.py --gml {0}",
         [
             "text/xml"
         ],
@@ -145,7 +145,7 @@
     ],
     [
         "gmltopng_thumb_bg",
-        "python ./bin/gml_to_png_thumbnail_bg.py --gml %s --country %s",
+        "python ./bin/gml_to_png_thumbnail_bg.py --gml {0} --country {0}",
         [
             "text/xml"
         ],
@@ -153,7 +153,7 @@
     ],
     [
         "gmltopng",
-        "python ./bin/gml_to_png.py --gml %s",
+        "python ./bin/gml_to_png.py --gml {0}",
         [
             "text/xml"
         ],
@@ -161,7 +161,7 @@
     ],
     [
         "gmltopng_thumb",
-        "python ./bin/gml_to_png_thumbnail.py --gml %s",
+        "python ./bin/gml_to_png_thumbnail.py --gml {0}",
         [
             "text/xml"
         ],
@@ -169,7 +169,7 @@
     ],
     [
         "gmltopng_bg",
-        "python ./bin/gml_to_png_bg.py --gml %s --country %s",
+        "python ./bin/gml_to_png_bg.py --gml {0} --country {0}",
         [
             "text/xml"
         ],
@@ -177,7 +177,7 @@
     ],
     [
         "rar2list",
-        "unrar l %s",
+        "unrar l {0}",
         [
             "application/x-rar-compressed"
         ],
@@ -185,7 +185,7 @@
     ],
     [
         "rar2list2",
-        "unrar l %s",
+        "unrar l {0}",
         [
             "application/rar"
         ],
@@ -193,7 +193,7 @@
     ],
     [
         "dbf_as_html",
-        "./bin/converters/dbf_as_html %s",
+        "./bin/converters/dbf_as_html {0}",
         [
             "application/x-dbf"
         ],
@@ -201,7 +201,7 @@
     ],
     [
         "prj_as_html",
-        "./bin/converters/prj_as_html %s",
+        "./bin/converters/prj_as_html {0}",
         [
             "application/x-prj"
         ],
@@ -209,7 +209,7 @@
     ],
     [
         "list_7zip",
-        "7za l %s",
+        "7za l {0}",
         [
             "application/x-7zip"
         ],
@@ -217,7 +217,7 @@
     ],
     [
         "txt_to_wkt",
-        "awk -f ./bin/converters/scripts/txt_to_wkt.awk %s",
+        "awk -f ./bin/converters/scripts/txt_to_wkt.awk {0}",
         [
             "application/x-prj"
         ],
@@ -225,7 +225,7 @@
     ],
     [
         "shp2kml",
-        "./bin/converters/shp_to_kml.sh %s",
+        "./bin/converters/shp_to_kml.sh {0}",
         [
             "application/x-shp"
         ],
@@ -233,7 +233,7 @@
     ],
     [
         "shp_info",
-        "ogrinfo -al -so %s",
+        "ogrinfo -al -so {0}",
         [
             "application/x-shp"
         ],
@@ -241,7 +241,7 @@
     ],
     [
         "shp2img",
-        "./bin/converters/shp_to_img.sh %s",
+        "./bin/converters/shp_to_img.sh {0}",
         [
             "application/x-shp"
         ],
@@ -249,7 +249,7 @@
     ],
     [
         "SHP2img",
-        "./bin/converters/shp_to_img.sh %s",
+        "./bin/converters/shp_to_img.sh {0}",
         [
             "application/x-shp"
         ],

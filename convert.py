@@ -37,15 +37,13 @@ def list_converters_params():
         )
     return results
 
-"""
 def call(converter_id, filename):
     converter = init_converters().get(converter_id, None)
     if converter:
         command = converter.command
-        return subprocess.check_output(command.format(filename=filename), shell=True)
+        return subprocess.check_output(command.format(filename), shell=True)
     else:
         raise NotImplementedError
-"""
 
 def list_converters():
     return converters.keys()
@@ -71,15 +69,6 @@ def list_converters_params():
              conv.suffix] #suffix
         )
     return results
-
-
-def call(converter_id, filename):
-    converter = converters.get(converter_id, None)
-    if converter:
-        command = converter.command
-        return subprocess.check_output(command %filename, shell=True)
-    else:
-        raise NotImplementedError
 
 
 class Converter(object):
