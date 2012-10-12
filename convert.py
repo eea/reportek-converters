@@ -37,7 +37,7 @@ def list_converters_params():
         )
     return results
 
-
+"""
 def call(converter_id, filename):
     converter = init_converters().get(converter_id, None)
     if converter:
@@ -45,7 +45,7 @@ def call(converter_id, filename):
         return subprocess.check_output(command.format(filename=filename), shell=True)
     else:
         raise NotImplementedError
-
+"""
 
 def list_converters():
     return converters.keys()

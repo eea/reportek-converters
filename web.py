@@ -35,8 +35,6 @@ def converters_params():
 
 @web.route("/convert/<string:name>", methods=["POST"])
 def convert(name):
-    if name == 'list_7zip':
-        import pdb; pdb.set_trace()
     document = getattr(flask.request.files.get('file', ''), 'stream', None)
     if not document:
         import StringIO

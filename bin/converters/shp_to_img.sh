@@ -21,7 +21,7 @@ EXITCODE=$?
 if [[ $EXITCODE != 0 ]]
 	then
 		printf "\nERROR 1 - File: %s\n\n"  "$1" >> $ERRFILE
-		cat /var/local/cdr/converters/scripts/shp_error.png
+		cat `pwd`/bin/converters/scripts/shp_error.png
 		rm -f $MAPFILE $SHPFILE $SHXFILE $DBFFILE $PRJFILE
 		exit 1
 fi
@@ -34,7 +34,7 @@ EXITCODE=$?
 if [[ $EXITCODE != 0 ]]
 	then
 		printf "\nERROR 2 - File: %s\n\n"  "$1" >> $ERRFILE
-		cat /var/local/cdr/converters/scripts/shp_error.png
+		cat `pwd`/bin/converters/scripts/shp_error.png
 		rm -f $MAPFILE $SHPFILE $SHXFILE $DBFFILE $PRJFILE
 		exit 2
 fi
@@ -105,7 +105,7 @@ awk -v shp_orig="$1" '
 
 		print
 
-	} ' $INFFILE /var/local/cdr/converters/scripts/template.map > $MAPFILE 2>>$ERRFILE
+	} ' $INFFILE `pwd`/bin/converters/scripts/template.map > $MAPFILE 2>>$ERRFILE
 
 
 # Catch errors 
@@ -114,7 +114,7 @@ EXITCODE=$?
 if [[ $EXITCODE != 0 ]]
 	then
 		printf "\nERROR 3 - File: %s\n\n"  "$1" >> $ERRFILE
-		cat /var/local/cdr/converters/scripts/shp_error.png
+		cat `pwd`/bin/converters/scripts/shp_error.png
 		rm -f $MAPFILE $SHPFILE $SHXFILE $DBFFILE $PRJFILE
 		exit 3
 fi
@@ -127,7 +127,7 @@ EXITCODE=$?
 if [[ $EXITCODE != 0 ]]
 	then
 		printf "\nERROR 4 - File: %s\n\n"  "$1" >> $ERRFILE
-		cat /var/local/cdr/converters/scripts/shp_error.png
+		cat `pwd`/bin/converters/scripts/shp_error.png
 		rm -f $MAPFILE $SHPFILE $SHXFILE $DBFFILE $PRJFILE
 		exit 4
 fi

@@ -2,6 +2,7 @@ import unittest
 import flask
 import tempfile
 import sys
+import os
 from StringIO import StringIO
 from web import create_app
 
@@ -11,14 +12,19 @@ class WebTest(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
 
-    def assertInResponse(self, text, filename):
+    def assertResponse(self, text, filename, assertion=None):
         """ the caller function must be named test_<converter_id> """
+        if not assertion:
+            assertion = self.assertIn
         data = {}
         converter_id = sys._getframe(1).f_code.co_name[5:]
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         with file(filename) as f:
-            data['file'] = (f, 'test.ppt')
+            data['file'] = (f, 'test.ext')
             resp = self.client.post("/convert/%s" %converter_id, data=data)
-            self.assertIn(text, resp.data)
+            assertion(text, resp.data)
 
     def test_home(self):
         resp = self.client.get("/")
@@ -61,45 +67,120 @@ class WebTest(unittest.TestCase):
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual(500, resp.status_code)
 
-    def test_rar2list(self):
-        self.assertInResponse('fisier.txt', 'tests/rar_data/onefile.rar')
-
     def test_gmltopng_thumb(self):
-        self.assertInResponse('PNG', 'tests/gml_data/world.gml')
+        self.assertResponse('PNG', 'tests/gml_data/world.gml')
 
     def test_msxls2html(self):
-        self.assertInResponse('test file', 'tests/xls_data/test.xls')
+        self.assertResponse('test file', 'tests/xls_data/test.xls')
 
     def test_vndmsxls2html(self):
-        self.assertInResponse('test file', 'tests/xls_data/test.xls')
+        self.assertResponse('test file', 'tests/xls_data/test.xls')
 
     def test_xsl2html(self):
-        self.assertInResponse('test file', 'tests/xls_data/test.xls')
+        self.assertResponse('test file', 'tests/xls_data/test.xls')
 
     def test_ppt2html(self):
-        self.assertInResponse('pptHtml', 'tests/ppt_data/test.ppt')
+        self.assertResponse('pptHtml', 'tests/ppt_data/test.ppt')
 
     def test_vndmsppt2html(self):
-        self.assertInResponse('pptHtml', 'tests/ppt_data/test.ppt')
+        self.assertResponse('pptHtml', 'tests/ppt_data/test.ppt')
 
     def test_ziplist(self):
-        self.assertInResponse('fisier.txt', 'tests/zip_data/test.zip')
+        self.assertResponse('fisier.txt', 'tests/zip_data/test.zip')
 
     def test_msword2text(self):
-        self.assertInResponse('test .doc file', 'tests/doc_data/test.doc')
+        self.assertResponse('test .doc file', 'tests/doc_data/test.doc')
 
     def test_accesstables(self):
-        self.assertInResponse('Purchases', 'tests/mdb_data/test.mdb')
+        self.assertResponse('Purchases', 'tests/mdb_data/test.mdb')
 
     def test_msword2html(self):
-        self.assertInResponse('test .doc file', 'tests/doc_data/test.doc')
+        self.assertResponse('test .doc file', 'tests/doc_data/test.doc')
 
     def test_ziplist2(self):
-        self.assertInResponse('fisier.txt', 'tests/zip_data/test.zip')
+        self.assertResponse('fisier.txt', 'tests/zip_data/test.zip')
 
     def test_pdftohtml(self):
-        self.assertInResponse('Flask&#160;Documentation', 'tests/pdf_data/sample.pdf')
+        self.assertResponse('Flask&#160;Documentation', 'tests/pdf_data/sample.pdf')
 
     def test_odt2html(self):
-        self.assertInResponse('test .odt file', 'tests/odt_data/test.odt')
+        self.assertResponse('test .odt file', 'tests/odt_data/test.odt')
 
+    def test_ods2html(self):
+        self.assertResponse('test file', 'tests/ods_data/test.ods')
+
+    @unittest.skip('special command') #TODO implement later
+    def test_flash_ext_png(self):
+        filename = ('tests/gml_data/world.gml')
+        text = 'PNG'
+        data = {}
+        converter_id = sys._getframe(1).f_code.co_name[5:]
+        with file(filename) as f:
+            data['file'] = (f, 'test.ext')
+            resp = self.client.post("/convert/%s" %converter_id, data=data)
+            self.assertIn(text, resp.data)
+
+    @unittest.skip('wrong command?') #TODO implement later
+    def test_gmltoflash(self):
+        self.assertResponse('test file', 'tests/ods_data/test.ods')
+
+    @unittest.skip('command needs a schema') #TODO implement later
+    def test_gmltoshp(self):
+        self.assertResponse('test file', 'tests/gml_data/world.gml')
+
+    def test_gmltokml(self):
+        self.assertResponse('<kml', 'tests/gml_data/world.gml')
+
+    @unittest.skip('command needs a country') #TODO implement later
+    def test_gmltopng_thumb_bg(self):
+        self.assertResponse('PNG', 'tests/gml_data/world.gml')
+
+    def test_gmltopng(self):
+        self.assertResponse('PNG', 'tests/gml_data/world.gml')
+
+    def test_gmltopng_thumb(self):
+        self.assertResponse('PNG', 'tests/gml_data/world.gml')
+
+    @unittest.skip('command needs a country') #TODO implement later
+    def test_gmltopng_bg(self):
+        self.assertResponse('PNG', 'tests/gml_data/world.gml')
+
+    def test_rar2list(self):
+        self.assertResponse('fisier.txt', 'tests/rar_data/onefile.rar')
+
+    def test_rar2list2(self):
+        self.assertResponse('fisier.txt', 'tests/rar_data/onefile.rar')
+
+    @unittest.skip('missing dbflib.py') #TODO implement later
+    def test_dbf_as_html(self):
+        self.assertResponse('fisier.txt', 'tests/dbf_data/test.dbf')
+
+    def test_prj_as_html(self):
+        self.assertResponse('Lambert_Conformal_Conic', 'tests/prj_data/test.prj')
+
+    def test_list_7zip(self):
+        self.assertResponse('one.txt', 'tests/sz_data/twofiles.7z')
+
+    def test_txt_to_wkt(self):
+        self.assertResponse('test file', 'tests/txt_data/test.txt')
+
+    @unittest.skip('missing ogr2ogr') #TODO implement later
+    def test_shp2kml(self):
+        self.assertResponse('command not found',
+                                 'tests/shp_data/test.shp',
+                                 self.assertNotIn)
+        self.assertResponse('<kml', 'tests/shp_data/test.shp')
+
+    @unittest.skip('command error') #TODO implement later
+    def test_shp_info(self):
+        self.assertResponse('<kml', 'tests/shp_data/test.shp')
+
+    @unittest.skip('command error') #TODO implement later
+    def test_shp2img(self):
+        self.assertResponse('<kml', 'tests/shp_data/test.shp')
+
+    @unittest.skip('command error') #TODO implement later
+    def test_SHP2img(self):
+        self.assertResponse('Error',
+                            'tests/shp_data/test.shp',
+                            self.assertNotIn)
