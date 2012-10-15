@@ -67,7 +67,9 @@
         "accesstables",
         "mdb-tables -1 {0}",
         [
-            "application/msaccess"
+            "application/vnd.ms-access",
+            "application/msaccess",
+            "application/x-msaccess"
         ],
         "Show list of tables"
     ],
@@ -211,6 +213,7 @@
         "list_7zip",
         "7za l {0}",
         [
+            "application/x-7z-compressed",
             "application/x-7zip"
         ],
         "List of contents"
