@@ -129,7 +129,7 @@
     ],
     [
         "gmltoshp",
-        "python ./bin/gml_to_shp.py --gml {0} --schema {0}",
+        "python ./bin/gml_to_shp.py --gml {0} --schema {1}",
         [
             "text/xml"
         ],
@@ -145,7 +145,7 @@
     ],
     [
         "gmltopng_thumb_bg",
-        "python ./bin/gml_to_png_thumbnail_bg.py --gml {0} --country {0}",
+        "python ./bin/gml_to_png_thumbnail_bg.py --gml {0} --country {1}",
         [
             "text/xml"
         ],
@@ -169,7 +169,7 @@
     ],
     [
         "gmltopng_bg",
-        "python ./bin/gml_to_png_bg.py --gml {0} --country {0}",
+        "python ./bin/gml_to_png_bg.py --gml {0} --country {1}",
         [
             "text/xml"
         ],

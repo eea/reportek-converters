@@ -37,11 +37,12 @@ def list_converters_params():
         )
     return results
 
-def call(converter_id, filename):
+def call(converter_id, filename, extra_args=[]):
+    format_params = [filename]+ extra_args
     converter = init_converters().get(converter_id, None)
     if converter:
         command = converter.command
-        return subprocess.check_output(command.format(filename), shell=True)
+        return subprocess.check_output(command.format(*format_params), shell=True)
     else:
         raise NotImplementedError
 

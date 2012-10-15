@@ -48,7 +48,10 @@ def convert(name):
         tmp.file.seek(0)
         import subprocess
         try:
-            response = call(name, tmp.name)
+            extra_params = flask.request.form.values()
+            if not extra_params:
+                extra_params = flask.request.args.values()
+            response = call(name, tmp.name, list(extra_params))
         except subprocess.CalledProcessError as exp:
             #TODO return error response
             raise exp

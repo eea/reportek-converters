@@ -12,7 +12,7 @@ class WebTest(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
 
-    def assertResponse(self, text, filename, assertion=None):
+    def assertResponse(self, text, filename, extra_params=None, assertion=None):
         """ the caller function must be named test_<converter_id> """
         if not assertion:
             assertion = self.assertIn
@@ -22,6 +22,8 @@ class WebTest(unittest.TestCase):
         if not os.path.exists(dirname):
             os.makedirs(dirname)
         with file(filename) as f:
+            if extra_params:
+                data.update(extra_params)
             data['file'] = (f, 'test.ext')
             resp = self.client.post("/convert/%s" %converter_id, data=data)
             assertion(text, resp.data)
@@ -109,18 +111,12 @@ class WebTest(unittest.TestCase):
     def test_ods2html(self):
         self.assertResponse('test file', 'tests/ods_data/test.ods')
 
-    @unittest.skip('special command') #TODO implement later
+    @unittest.skip('broken converter?') #NOTE ask about it
     def test_flash_ext_png(self):
-        filename = ('tests/gml_data/world.gml')
-        text = 'PNG'
-        data = {}
-        converter_id = sys._getframe(1).f_code.co_name[5:]
-        with file(filename) as f:
-            data['file'] = (f, 'test.ext')
-            resp = self.client.post("/convert/%s" %converter_id, data=data)
-            self.assertIn(text, resp.data)
+        data = dict(minx=None, miny=None, maxx=None, maxy=None, server=None, service=None)
+        self.assertResponse('PNG', 'tests/gml_data/world.gml', extra_params=data)
 
-    @unittest.skip('wrong command?') #TODO implement later
+    @unittest.skip('wrong command?') #NOTE ask about it
     def test_gmltoflash(self):
         self.assertResponse('test file', 'tests/ods_data/test.ods')
 
