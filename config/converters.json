@@ -67,7 +67,7 @@
         "accesstables",
         "mdb-tables -1 {0}",
         [
-            "application/msaccess"
+            "application/x-msaccess"
         ],
         "Show list of tables"
     ],
