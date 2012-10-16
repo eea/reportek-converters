@@ -51,7 +51,10 @@ class WebTest(unittest.TestCase):
                 ['%srar2list' %self.app.config.get('PREFIX', ''), #id
                  'List of contents (%s)' %self.app.config.get('TAG', ''), #title
                  'convert/rar2list', #convert_url
-                 'application/x-rar-compressed', #ct_input
+                 [
+                     u'application/x-rar-compressed',
+                     u'application/rar'
+                 ], #ct_input
                  'text/plain;charset="utf-8"', #ct_output
                  '', #ct_schema
                  [], #ct_extraparams
