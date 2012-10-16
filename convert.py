@@ -99,7 +99,7 @@ class Converter(object):
         self.title = title or self.name
         self.description = description
         if self.accepted_content_types:
-            self.ct_input = self.accepted_content_types[0]
+            self.ct_input = self.accepted_content_types
         else:
             self.ct_input = ''
         self.ct_output = self.returned_content_type
