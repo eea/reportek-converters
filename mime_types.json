@@ -250,6 +250,8 @@
 
    "prf": ["application/pics-rules"],
 
+   "prj": ["application/x-prj"],
+
    "ps": ["application/postscript"],
 
    "pub": ["application/x-mspublisher"],
