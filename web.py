@@ -3,7 +3,7 @@ import flask
 import flask.ext.script
 import tempfile
 
-from convert import call, list_converters, list_converters_params
+from convert import call, list_converters, list_converters_params, converters
 
 web = flask.Blueprint("web", __name__)
 
@@ -55,8 +55,8 @@ def convert(name):
         except subprocess.CalledProcessError as exp:
             #TODO return error response
             response = exp.output
-            return exp.output
-        return flask.Response(response, direct_passthrough=True, content_type="application/octet-stream")
+        content_type = converters.get(name).ct_output
+        return flask.Response(response, content_type=content_type)
 
 
 app = create_app()

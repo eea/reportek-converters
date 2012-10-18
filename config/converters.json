@@ -160,7 +160,7 @@
         "./bin/converters/shp_to_img.sh {0}",
         ["application/x-shp"],
         "Show Shapefile as image",
-        "image/jpeg"],
+        "image/png"],
     [   "graphviz",
         "dot -Tpng {0}",
         ["text/vnd.graphviz"],
