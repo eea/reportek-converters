@@ -42,7 +42,10 @@ def call(converter_id, filename, extra_args=[]):
     converter = init_converters().get(converter_id, None)
     if converter:
         command = converter.command
-        return subprocess.check_output(command.format(*format_params), shell=True)
+        return subprocess.check_output(
+                command.format(*format_params),
+                stderr=subprocess.STDOUT,
+                shell=True)
     else:
         raise NotImplementedError
 
