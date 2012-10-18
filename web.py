@@ -54,9 +54,9 @@ def convert(name):
             response = call(name, tmp.name, list(extra_params))
         except subprocess.CalledProcessError as exp:
             #TODO return error response
+            response = exp.output
             return exp.output
-        else:
-            return flask.Response(response, direct_passthrough=True, content_type="application/octet-stream")
+        return flask.Response(response, direct_passthrough=True, content_type="application/octet-stream")
 
 
 app = create_app()

@@ -55,7 +55,7 @@ class WebTest(unittest.TestCase):
                      u'application/x-rar-compressed',
                      u'application/rar'
                  ], #ct_input
-                 'text/plain;charset="utf-8"', #ct_output
+                 'text/plain;charset=utf-8', #ct_output
                  '', #ct_schema
                  [], #ct_extraparams
                  '', #description
