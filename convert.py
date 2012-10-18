@@ -41,14 +41,21 @@ def list_converters_params():
     return results
 
 def call(converter_id, filename, extra_args=[]):
-    format_params = [filename]+ extra_args
+    format_params = [filename] + extra_args
     converter = init_converters().get(converter_id, None)
     if converter:
         command = converter.command
-        return subprocess.check_output(
-                command.format(*format_params),
-                stderr=subprocess.STDOUT,
-                shell=True)
+        #TODO set status in view
+        status = 500
+        try:
+            response = subprocess.check_output(
+                           command.format(*format_params),
+                           stderr=subprocess.STDOUT,
+                           shell=True)
+            status = 200
+        except subprocess.CalledProcessError as exp:
+            response = exp.output
+        return (status, response)
     else:
         raise NotImplementedError
 

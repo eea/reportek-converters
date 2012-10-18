@@ -46,17 +46,12 @@ def convert(name):
             tmp.file.write(chunk)
         tmp.file.flush()
         tmp.file.seek(0)
-        import subprocess
-        try:
-            extra_params = flask.request.form.values()
-            if not extra_params:
-                extra_params = flask.request.args.values()
-            response = call(name, tmp.name, list(extra_params))
-        except subprocess.CalledProcessError as exp:
-            #TODO return error response
-            response = exp.output
+        extra_params = flask.request.form.values()
+        if not extra_params:
+            extra_params = flask.request.args.values()
+        status, response = call(name, tmp.name, list(extra_params))
         content_type = converters.get(name).ct_output
-        return flask.Response(response, content_type=content_type)
+        return flask.Response(response, status=status, content_type=content_type)
 
 
 app = create_app()
