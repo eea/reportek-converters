@@ -2,7 +2,7 @@
 
    "323": ["text/h323"],
 
-   "7z": ["application/x-7z-compressed"],
+   "7z": ["application/x-7z-compressed", "application/x-7zip"],
 
    "*": ["application/octet-stream"],
 
