@@ -5,6 +5,9 @@ import subprocess
 from path import path
 from utils import mime_type, extension
 
+class ConversionError(Exception):
+    """ Raised when returncode is not 0  """
+
 
 def init_converters():
     config_path = path(__file__).parent.abspath() / 'config'
@@ -45,17 +48,16 @@ def call(converter_id, filename, extra_args=[]):
     converter = init_converters().get(converter_id, None)
     if converter:
         command = converter.command
-        #TODO set status in view
-        status = 500
         try:
             response = subprocess.check_output(
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
                            shell=True)
-            status = 200
+            return response
         except subprocess.CalledProcessError as exp:
-            response = exp.output
-        return (status, response)
+            cexp = ConversionError()
+            cexp.output = exp.output
+            raise cexp
     else:
         raise NotImplementedError
 

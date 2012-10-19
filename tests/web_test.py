@@ -3,8 +3,11 @@ import flask
 import tempfile
 import sys
 import os
+import web
+from mock import patch
 from StringIO import StringIO
 from web import create_app
+from convert import call
 
 class WebTest(unittest.TestCase):
 
@@ -66,11 +69,70 @@ class WebTest(unittest.TestCase):
         if prefix:
             self.assertIn(prefix, json.loads(resp.data).get('prefix'))
 
-    def test_unknown_converter(self):
+    @patch('web.call')
+    def test_return_NotImplementedError(self, mock_call):
+        mock_call.side_effect = NotImplementedError
+        data = {}
+        data['file'] = (StringIO("file data"), 'file.unk')
+        resp = self.client.post("/convert/unknown", data=data)
+        self.assertEqual(404, resp.status_code)
+
+    @patch('web.call')
+    def test_return_ConversionError(self, mock_call):
+        from convert import ConversionError
+        mock_call.side_effect = ConversionError
         data = {}
         data['file'] = (StringIO("file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual(500, resp.status_code)
+
+    @patch('web.call')
+    @patch.object(web, 'converters')
+    def test_ConversionError_output(self, mock_converters,  mock_call):
+        from convert import Converter
+        mock_converters.get.return_value = Converter('unknown',
+                                                     'test title',
+                                                     ['text/plain'],
+                                                     'image/jpeg')
+        from convert import ConversionError
+        exp = ConversionError()
+        exp.output = 'test error'
+        mock_call.side_effect = exp
+
+        data = {}
+        data['file'] = (StringIO("file data"), 'file.unk')
+        resp = self.client.post("/convert/unknown", data=data)
+        self.assertEqual('image/jpeg', resp.content_type)
+
+    @patch('web.call')
+    @patch.object(web, 'converters')
+    def test_NotImplementedError_output(self, mock_converters,  mock_call):
+        from convert import Converter
+        mock_converters.get.return_value = Converter('unknown',
+                                                     'test title',
+                                                     ['text/plain'],
+                                                     'image/jpeg')
+        mock_call.side_effect = NotImplementedError
+
+        data = {}
+        data['file'] = (StringIO("file data"), 'file.unk')
+        resp = self.client.post("/convert/unknown", data=data)
+        self.assertEqual('text/plain', resp.content_type)
+
+    @patch('web.call')
+    @patch.object(web, 'converters')
+    def test_normal_output(self, mock_converters,  mock_call):
+        from convert import Converter
+        mock_converters.get.return_value = Converter('unknown',
+                                                     'test title',
+                                                     ['text/plain'],
+                                                     'image/jpeg')
+        mock_call.return_value = 'normal operation'
+
+        data = {}
+        data['file'] = (StringIO("file data"), 'file.unk')
+        resp = self.client.post("/convert/unknown", data=data)
+        self.assertEqual('image/jpeg', resp.content_type)
 
     def test_gmltopng_thumb(self):
         self.assertResponse('PNG', 'tests/gml_data/world.gml')

@@ -9,12 +9,12 @@ class RarConverterTest(unittest.TestCase):
 
     def test_rar2list_returns_listing_with_one_file(self):
         from convert import call
-        status, result = call('rar2list', str(rar_data / 'onefile.rar'))
+        result = call('rar2list', str(rar_data / 'onefile.rar'))
         self.assertIn('fisier.txt', result)
         self.assertIn('04-09-12', result)
 
     def test_rar2list_with_unicode_characters_returns_contents(self):
         from convert import call
-        status, result = call('rar2list', str(rar_data / 'diacritics.rar'))
+        result = call('rar2list', str(rar_data / 'diacritics.rar'))
         self.assertIn(u"director cu spații și diacritice".encode('utf-8'),
                       result)

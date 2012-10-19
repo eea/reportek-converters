@@ -3,7 +3,9 @@ import flask
 import flask.ext.script
 import tempfile
 
-from convert import call, list_converters, list_converters_params, converters
+from convert import (call, list_converters,
+                     list_converters_params, converters,
+                     ConversionError)
 
 web = flask.Blueprint("web", __name__)
 
@@ -49,8 +51,19 @@ def convert(name):
         extra_params = flask.request.form.values()
         if not extra_params:
             extra_params = flask.request.args.values()
-        status, response = call(name, tmp.name, list(extra_params))
-        content_type = converters.get(name).ct_output
+        try:
+            response = call(name, tmp.name, list(extra_params))
+        except ConversionError as exp:
+            response = exp.output
+            status = 500
+            content_type = converters.get(name).ct_output
+        except NotImplementedError as exp:
+            response = ''
+            status = 404
+            content_type = 'text/plain'
+        else:
+            status = 200
+            content_type = converters.get(name).ct_output
         return flask.Response(response, status=status, content_type=content_type)
 
 
