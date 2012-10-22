@@ -62,7 +62,7 @@ class WebTest(unittest.TestCase):
                  '', #ct_schema
                  [], #ct_extraparams
                  '', #description
-                 'rar'], #suffix
+                 ''], #suffix
                 json.loads(resp.data)['list']
             )
         prefix = self.app.config.get('PREFIX', None)

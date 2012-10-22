@@ -3,7 +3,6 @@ import flask
 import json
 import subprocess
 from path import path
-from utils import mime_type, extension
 
 class ConversionError(Exception):
     """ Raised when returncode is not 0  """
@@ -120,13 +119,7 @@ class Converter(object):
         self.ct_output = self.returned_content_type
         self.ct_schema = ''
         self.ct_extraparams = []
-        for mime in self.accepted_content_types:
-            ext = extension(mime)
-            if ext:
-                break
-        else:
-            ext = ''
-        self.suffix = ext
+        self.suffix = ''
 
 
 converters = init_converters()
