@@ -3,6 +3,11 @@ import flask
 import json
 import subprocess
 from path import path
+import logging
+
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
+                    datefmt='%d/%m/%Y %I:%M:%S %p')
+conversion_log = logging.getLogger(__name__ + '.monitoring')
 
 class ConversionError(Exception):
     """ Raised when returncode is not 0  """
@@ -56,6 +61,15 @@ def call(converter_id, filename, extra_args=[]):
         except subprocess.CalledProcessError as exp:
             cexp = ConversionError()
             cexp.output = exp.output
+            message = ('[CONVERSION ERROR]\n'
+                       'converter id: %s\n'
+                       'output: %s')
+            try:
+                response.decode('ascii')
+            except UnicodeDecodeError:
+                conversion_log.warning(message %(name, '[not a text message]'))
+            else:
+                conversion_log.warning(message %(name, response))
             raise cexp
     else:
         raise NotImplementedError

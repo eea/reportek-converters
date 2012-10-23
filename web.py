@@ -2,7 +2,6 @@
 import flask
 import flask.ext.script
 import tempfile
-import logging
 import monitoring
 
 from convert import (call, list_converters,
@@ -10,8 +9,6 @@ from convert import (call, list_converters,
                      ConversionError)
 
 web = flask.Blueprint("web", __name__)
-
-conversion_log = logging.getLogger('web.conversion')
 
 
 def create_app():
@@ -62,15 +59,6 @@ def convert(name):
             response = exp.output
             status = 500
             content_type = converters.get(name).ct_output
-            message = ('[CONVERSION ERROR]\n'
-                       'converter id: %s\n'
-                       'output: %s')
-            try:
-                response.decode('ascii')
-            except UnicodeDecodeError:
-                conversion_log.warning(message %(name, '[not a text message]'))
-            else:
-                conversion_log.warning(message %(name, response))
         except NotImplementedError as exp:
             response = ''
             status = 404
