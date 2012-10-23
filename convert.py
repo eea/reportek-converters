@@ -67,9 +67,9 @@ def call(converter_id, filename, extra_args=[]):
             try:
                 exp.output.decode('ascii')
             except UnicodeDecodeError:
-                conversion_log.warning(message %(name, '[not a text message]'))
+                conversion_log.warning(message %(converter_id, '[not a text message]'))
             else:
-                conversion_log.warning(message %(name, response))
+                conversion_log.warning(message %(converter_id, exp.output))
             raise cexp
     else:
         raise NotImplementedError
