@@ -29,7 +29,7 @@ def list_converters():
 def list_converters_params():
     results = []
     app = flask.current_app
-    for conv in init_converters().values():
+    for conv in converters.values():
         name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
                                        name = conv.name)
         title = '{title} {tag}'.format(title=conv.title,
@@ -49,7 +49,7 @@ def list_converters_params():
 
 def call(converter_id, filename, extra_args=[]):
     format_params = [filename] + extra_args
-    converter = init_converters().get(converter_id, None)
+    converter = converters.get(converter_id, None)
     if converter:
         command = converter.command
         try:
@@ -67,7 +67,9 @@ def call(converter_id, filename, extra_args=[]):
             try:
                 exp.output.decode('ascii')
             except UnicodeDecodeError:
-                conversion_log.warning(message %(converter_id, '[not a text message]'))
+                conversion_log.warning(message %(converter_id,
+                                                 '[unable to display]\n')
+                                      )
             else:
                 conversion_log.warning(message %(converter_id, exp.output))
             raise cexp

@@ -15,7 +15,6 @@ def create_app():
     app = flask.Flask(__name__)
     app.config.from_pyfile("settings.py", silent=True)
     app.register_blueprint(web)
-    monitoring.initialize()
     return app
 
 
