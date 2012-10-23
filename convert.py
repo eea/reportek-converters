@@ -65,7 +65,7 @@ def call(converter_id, filename, extra_args=[]):
                        'converter id: %s\n'
                        'output: %s')
             try:
-                response.decode('ascii')
+                exp.output.decode('ascii')
             except UnicodeDecodeError:
                 conversion_log.warning(message %(name, '[not a text message]'))
             else:
