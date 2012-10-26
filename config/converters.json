@@ -165,4 +165,14 @@
         "dot -Tpng {0}",
         ["text/vnd.graphviz"],
         "Graphviz render .dot to .png",
-        "image/png"]]
+        "image/png"],
+    [   "tohtml",
+        "java -jar lib/tika-app-1.2.jar -h {0} | sed 's:<title/>:<title></title>:g'",
+        ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+         "application/vnd.ms-excel",
+         "application/pdf",
+         "text/xml"],
+        "View as html",
+        "text/html;charset=UTF-8"]
+]
