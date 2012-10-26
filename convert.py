@@ -4,6 +4,7 @@ import json
 import subprocess
 from path import path
 import logging
+from bs4 import BeautifulSoup, Tag, NavigableString
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p')
@@ -47,6 +48,7 @@ def list_converters_params():
         )
     return results
 
+
 def call(converter_id, filename, extra_args=[]):
     format_params = [filename] + extra_args
     converter = converters.get(converter_id, None)
@@ -57,6 +59,13 @@ def call(converter_id, filename, extra_args=[]):
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
                            shell=True)
+            soup = BeautifulSoup(response)
+            if soup.html:
+                style_tag = Tag(name="style")
+                soup.html.head.contents.append(style_tag)
+                styling = "table, th, td {border: solid 1px black;}"
+                style_tag.insert(0, styling)
+                response = soup.html.prettify()
             return response
         except subprocess.CalledProcessError as exp:
             cexp = ConversionError()
@@ -75,6 +84,7 @@ def call(converter_id, filename, extra_args=[]):
             raise cexp
     else:
         raise NotImplementedError
+
 
 def list_converters():
     return converters.keys()
