@@ -168,7 +168,7 @@ class WebTest(unittest.TestCase):
         self.assertResponse('fisier.txt', 'tests/zip_data/test.zip')
 
     def test_pdftohtml(self):
-        self.assertResponse('Flask\xc2\xa0Documentation', 'tests/pdf_data/sample.pdf')
+        self.assertResponse('Flask', 'tests/pdf_data/sample.pdf')
 
     def test_odt2html(self):
         self.assertResponse('test .odt file', 'tests/odt_data/test.odt')

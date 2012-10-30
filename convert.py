@@ -59,13 +59,6 @@ def call(converter_id, filename, extra_args=[]):
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
                            shell=True)
-            soup = BeautifulSoup(response)
-            if soup.html:
-                style_tag = Tag(name="style")
-                soup.html.head.contents.append(style_tag)
-                styling = "table, th, td {border: solid 1px black;}"
-                style_tag.insert(0, styling)
-                response = soup.html.prettify()
             return response
         except subprocess.CalledProcessError as exp:
             cexp = ConversionError()

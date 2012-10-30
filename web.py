@@ -3,6 +3,7 @@ import flask
 import flask.ext.script
 import tempfile
 import monitoring
+import base64
 
 from convert import (call, list_converters,
                      list_converters_params, converters,
@@ -55,7 +56,7 @@ def convert(name):
         try:
             response = call(name, tmp.name, list(extra_params))
         except ConversionError as exp:
-            response = exp.output
+            response = base64.b64encode(exp.output)
             status = 500
             content_type = converters.get(name).ct_output
         except NotImplementedError as exp:
