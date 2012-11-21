@@ -179,6 +179,6 @@
          "text/plain",
          "application/vnd.ms-powerpoint",
          "application/vnd.ms-excel"],
-        "View with Apache Tika",
+        "View as HTML",
         "text/html;charset=UTF-8"]
 ]
