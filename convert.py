@@ -89,8 +89,12 @@ def list_converters_params():
     for conv in converters.values():
         name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
                                        name = conv.name)
-        title = '{title} {tag}'.format(title=conv.title,
-                                       tag='(%s)' %app.config.get('TAG', ''))
+        tag = app.config.get('TAG', '')
+        if tag:
+            title = '{title} {tag}'.format(title=conv.title,
+                                           tag='(%s)' %tag)
+        else:
+            title = '{title}'.format(title=conv.title)
         results.append(
             [name, #id
              title, #title

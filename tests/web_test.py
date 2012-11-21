@@ -50,9 +50,13 @@ class WebTest(unittest.TestCase):
         with self.app.test_request_context():
             resp = self.client.get("/params")
             import json
+            tag = self.app.config.get('TAG', '')
+            title = 'List of contents'
+            if tag:
+                title = 'List of contents (%s)' %tag
             self.assertIn(
                 ['%srar2list' %self.app.config.get('PREFIX', ''), #id
-                 'List of contents (%s)' %self.app.config.get('TAG', ''), #title
+                 title,
                  'convert/rar2list', #convert_url
                  [
                      u'application/x-rar-compressed',
