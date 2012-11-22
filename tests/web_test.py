@@ -168,9 +168,6 @@ class WebTest(unittest.TestCase):
     def test_msword2html(self):
         self.assertResponse('test .doc file', 'tests/doc_data/test.doc')
 
-    def test_ziplist2(self):
-        self.assertResponse('fisier.txt', 'tests/zip_data/test.zip')
-
     def test_pdftohtml(self):
         self.assertResponse('Flask', 'tests/pdf_data/sample.pdf')
 
