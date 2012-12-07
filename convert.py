@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup, Tag, NavigableString
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p')
 conversion_log = logging.getLogger(__name__ + '.monitoring')
+conversion_log.setLevel(logging.DEBUG)
 
 class ConversionError(Exception):
     """ Raised when returncode is not 0  """

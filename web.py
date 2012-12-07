@@ -2,12 +2,18 @@
 import flask
 import flask.ext.script
 import tempfile
-import monitoring
 import base64
+import logging
+import os
 
 from convert import (call, list_converters,
                      list_converters_params, converters,
                      ConversionError)
+
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
+                    datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.DEBUG)
+logger = logging.getLogger(__name__ + '.monitoring')
+logger.setLevel(logging.DEBUG)
 
 web = flask.Blueprint("web", __name__)
 
@@ -44,6 +50,7 @@ def convert(name):
         import StringIO
         document = StringIO.StringIO(flask.request.data)
     with tempfile.NamedTemporaryFile() as tmp:
+        logger.info('%s opened.  (mode=%s)' %(tmp.name, tmp.file.mode))
         chunk = True
         while chunk:
             chunk = document.read(10)
@@ -66,7 +73,13 @@ def convert(name):
         else:
             status = 200
             content_type = converters.get(name).ct_output
-        return flask.Response(response, status=status, content_type=content_type)
+    if tmp.file.closed:
+        logger.info('%s closed.' %tmp.name)
+    if os.path.exists(tmp.name):
+        logger.warning('%s not deleted' %(tmp.name))
+    else:
+        logger.info('%s deleted.' %(tmp.name))
+    return flask.Response(response, status=status, content_type=content_type)
 
 
 app = create_app()
