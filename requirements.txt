@@ -1,4 +1,5 @@
 nose==1.1.2
 path.py==2.3
+Pillow==1.7.7
 Flask==0.9
 Flask-Script==0.4.0
