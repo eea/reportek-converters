@@ -82,11 +82,11 @@ def convert(name):
         'mime': content_type,
         'duration': duration}
     logger.info(
-        '\nPost conversion details:\n'
+        ('\nPost conversion details:\n'
         '\tConverter: {name}\n'
         '\tFile size: {size} bytes\n'
         '\tMime-type: {mime}\n'
-        '\tDuration:{duration}'.format(**log_details))
+        '\tDuration:  {duration:.4f} seconds').format(**log_details))
     return flask.Response(response, status=status, content_type=content_type)
 
 
