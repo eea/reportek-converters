@@ -5,6 +5,7 @@ import tempfile
 import base64
 import logging
 import os
+import time
 
 from convert import (call, list_converters,
                      list_converters_params, converters,
@@ -45,18 +46,19 @@ def converters_params():
 
 @web.route("/convert/<string:name>", methods=["POST"])
 def convert(name):
+    start = time.time()
     document = getattr(flask.request.files.get('file', ''), 'stream', None)
     if not document:
         import StringIO
         document = StringIO.StringIO(flask.request.data)
     with tempfile.NamedTemporaryFile() as tmp:
-        logger.info('%s opened.  (mode=%s)' %(tmp.name, tmp.file.mode))
         chunk = True
         while chunk:
             chunk = document.read(10)
             tmp.file.write(chunk)
         tmp.file.flush()
         tmp.file.seek(0)
+        file_size = os.path.getsize(tmp.name)
         extra_params = flask.request.form.values()
         if not extra_params:
             extra_params = flask.request.args.values()
@@ -73,12 +75,18 @@ def convert(name):
         else:
             status = 200
             content_type = converters.get(name).ct_output
-    if tmp.file.closed:
-        logger.info('%s closed.' %tmp.name)
-    if os.path.exists(tmp.name):
-        logger.warning('%s not deleted' %(tmp.name))
-    else:
-        logger.info('%s deleted.' %(tmp.name))
+    duration = time.time() - start
+    log_details = {
+        'name': name,
+        'size': file_size,
+        'mime': content_type,
+        'duration': duration}
+    logger.info(
+        '\nPost conversion details:\n'
+        '\tConverter: {name}\n'
+        '\tFile size: {size} bytes\n'
+        '\tMime-type: {mime}\n'
+        '\tDuration:{duration}'.format(**log_details))
     return flask.Response(response, status=status, content_type=content_type)
 
 
