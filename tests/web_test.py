@@ -26,7 +26,7 @@ class WebTest(unittest.TestCase):
             os.makedirs(dirname)
         with file(filename) as f:
             if extra_params:
-                data.update(extra_params)
+                data.update({'extraparams': extra_params})
             data['file'] = (f, 'test.ext')
             resp = self.client.post("/convert/%s" %converter_id, data=data)
             assertion(text, resp.data)
@@ -193,9 +193,9 @@ class WebTest(unittest.TestCase):
     def test_gmltokml(self):
         self.assertResponse('<kml', 'tests/gml_data/world.gml')
 
-    @unittest.skip('command needs a country') #TODO implement later
+    @unittest.skip('the script hangs on a post request')
     def test_gmltopng_thumb_bg(self):
-        self.assertResponse('PNG', 'tests/gml_data/world.gml')
+        self.assertResponse('PNG', 'tests/gml_data/world.gml', extra_params=['AT'])
 
     def test_gmltopng(self):
         self.assertResponse('PNG', 'tests/gml_data/world.gml')
