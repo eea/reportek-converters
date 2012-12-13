@@ -18,10 +18,8 @@ class ConversionError(Exception):
 def init_converters():
     config_path = path(__file__).parent.abspath() / 'config'
     params = json.loads((config_path / 'converters.json').bytes())
-    return {conv[0]: Converter(*conv[0:3],
-                                title=conv[3],
-                                returned_content_type=conv[4])
-            for conv in params}
+    return {args.pop('name'): Converter(**args)
+            for args in params}
 
 
 def list_converters():
