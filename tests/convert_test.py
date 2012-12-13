@@ -19,3 +19,20 @@ class ConvertTest(unittest.TestCase):
         from convert import converters, Converter
         converter = Converter('rar2list', 'unrar l {0}', mime_types.get('rar'))
         self.assertEqual(converter.command, converters['rar2list'].command)
+
+    @patch('convert.json')
+    def test_extraparams_initialisation(self, mock_json):
+        mock_json.loads = Mock(return_value=
+            [{  "name": "mock_converter",
+                "command": "command --arg {0} --extra_arg {1}",
+                "accepted_content_types": ["text/xml"],
+                "title": "View map as PNG image (thumbnail with background)",
+                "returned_content_type": "image/png",
+                "extraparams": ["country_code"]
+            }]
+        )
+        from convert import init_converters
+        converters = init_converters()
+        self.assertEqual(
+            ['country_code'],
+            converters['mock_converter'].extraparams)

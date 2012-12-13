@@ -41,7 +41,7 @@ def list_converters_params():
              conv.ct_input, #ct_input
              conv.ct_output, #ct_output
              conv.ct_schema, #ct_schema
-             conv.ct_extraparams, #ct_extraparams
+             conv.extraparams, #ct_extraparams
              conv.description, #description
              conv.suffix] #suffix
         )
@@ -101,7 +101,7 @@ def list_converters_params():
              conv.ct_input, #ct_input
              conv.ct_output, #ct_output
              conv.ct_schema, #ct_schema
-             conv.ct_extraparams, #ct_extraparams
+             conv.extraparams, #ct_extraparams
              conv.description, #description
              conv.suffix] #suffix
         )
@@ -112,23 +112,23 @@ class Converter(object):
 
     def __init__(self, name, command, accepted_content_types,
                 returned_content_type='text/plain;charset="utf-8"',
-                title=None,
-                ct_schema=None,
-                ct_extraparams=None,
+                title='',
+                extraparams=[],
                 description = '',
+                ct_schema=None,
                 ct_suffix=None):
         self.name = name
         self.command = command
         self.accepted_content_types = accepted_content_types #lista
         self.returned_content_type = returned_content_type
+        self.extraparams = extraparams
         self.__compatibility__init__(title,
                                      ct_schema,
-                                     ct_extraparams,
                                      description,
                                      ct_suffix)
 
 
-    def __compatibility__init__(self, title, ct_schema, ct_extraparams, description, ct_suffix):
+    def __compatibility__init__(self, title, ct_schema, description, ct_suffix):
         """used for compatibility"""
         #TODO refactor Reportek and eliminate this function
 
@@ -140,7 +140,6 @@ class Converter(object):
             self.ct_input = ''
         self.ct_output = self.returned_content_type
         self.ct_schema = ''
-        self.ct_extraparams = []
         self.suffix = ''
 
 
