@@ -115,7 +115,7 @@ class Converter(object):
                 title='',
                 extraparams=[],
                 description = '',
-                ct_schema=None,
+                ct_schema='',
                 ct_suffix=None):
         self.name = name
         self.command = command
@@ -139,7 +139,7 @@ class Converter(object):
         else:
             self.ct_input = ''
         self.ct_output = self.returned_content_type
-        self.ct_schema = ''
+        self.ct_schema = ct_schema
         self.suffix = ''
 
 
