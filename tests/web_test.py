@@ -45,7 +45,7 @@ class WebTest(unittest.TestCase):
         Converter params:
             id, title, convert_url, ct_input,
             ct_output, ct_schema, ct_extraparams,
-            description, suffix
+            description
         """
         with self.app.test_request_context():
             resp = self.client.get("/params")
@@ -65,8 +65,7 @@ class WebTest(unittest.TestCase):
                  'text/plain;charset=utf-8', #ct_output
                  '', #ct_schema
                  [], #ct_extraparams
-                 '', #description
-                 ''], #suffix
+                 ''], #description
                 json.loads(resp.data)['list']
             )
         prefix = self.app.config.get('PREFIX', None)

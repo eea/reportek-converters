@@ -22,32 +22,6 @@ def init_converters():
             for args in params}
 
 
-def list_converters():
-    return converters.keys()
-
-
-def list_converters_params():
-    results = []
-    app = flask.current_app
-    for conv in converters.values():
-        name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
-                                       name = conv.name)
-        title = '{title} {tag}'.format(title=conv.title,
-                                       tag='(%s)' %app.config.get('TAG', ''))
-        results.append(
-            [name, #id
-             title, #title
-             'convert/%s' %(conv.name), #convert_url
-             conv.ct_input, #ct_input
-             conv.ct_output, #ct_output
-             conv.ct_schema, #ct_schema
-             conv.extraparams, #ct_extraparams
-             conv.description, #description
-             conv.suffix] #suffix
-        )
-    return results
-
-
 def call(converter_id, filename, extra_args=[]):
     format_params = [filename] + extra_args
     converter = converters.get(converter_id, None)
@@ -102,8 +76,7 @@ def list_converters_params():
              conv.ct_output, #ct_output
              conv.ct_schema, #ct_schema
              conv.extraparams, #ct_extraparams
-             conv.description, #description
-             conv.suffix] #suffix
+             conv.description] #description
         )
     return results
 
@@ -115,8 +88,7 @@ class Converter(object):
                 title='',
                 extraparams=[],
                 description = '',
-                ct_schema='',
-                ct_suffix=None):
+                ct_schema=''):
         self.name = name
         self.command = command
         self.accepted_content_types = accepted_content_types #lista
@@ -124,11 +96,10 @@ class Converter(object):
         self.extraparams = extraparams
         self.__compatibility__init__(title,
                                      ct_schema,
-                                     description,
-                                     ct_suffix)
+                                     description)
 
 
-    def __compatibility__init__(self, title, ct_schema, description, ct_suffix):
+    def __compatibility__init__(self, title, ct_schema, description):
         """used for compatibility"""
         #TODO refactor Reportek and eliminate this function
 
@@ -140,7 +111,6 @@ class Converter(object):
             self.ct_input = ''
         self.ct_output = self.returned_content_type
         self.ct_schema = ct_schema
-        self.suffix = ''
 
 
 converters = init_converters()
