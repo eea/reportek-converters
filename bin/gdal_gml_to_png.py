@@ -19,7 +19,7 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
     with open(os.devnull, 'w') as fnull:
         with NamedTemporaryFile() as gtiff_file:
-            rasterize_command_string = ('gdal_rasterize'
+            rasterize_command_string = ('gdal_rasterize -q'
                                             ' -burn 255 -burn 0 -burn 0'
                                             ' -of GTiff -ts {width} {height}'
                                             ' {src} {dst}')
@@ -34,7 +34,7 @@ if __name__ == '__main__':
                     stderr=fnull,
                     shell=True)
             with NamedTemporaryFile(mode='w+') as png_file:
-                translate_command_string = ('gdal_translate'
+                translate_command_string = ('gdal_translate -q'
                                             ' -of PNG {0} {1}')
                 translate_command = translate_command_string.format(
                                         gtiff_file.name,
