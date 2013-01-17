@@ -18,6 +18,7 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
     with NamedTemporaryFile() as gtiff_file:
         rasterize_command_string = ('gdal_rasterize -q'
+                                        ' -init 255'
                                         ' -burn 255 -burn 0 -burn 0'
                                         ' -of GTiff -ts {width} {height}'
                                         ' {src} {dst}')
