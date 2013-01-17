@@ -4,7 +4,6 @@ import json
 import subprocess
 from path import path
 import logging
-from bs4 import BeautifulSoup, Tag, NavigableString
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p')
