@@ -116,7 +116,7 @@
     {   "name": "gdal_gmltopng",
         "command": "python ./bin/gdal_gml_to_png.py {0}",
         "accepted_content_types": ["text/xml"],
-        "title": "[GDAL]View map as PNG image without background",
+        "title": "View map as PNG image without background [GDAL]",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
         "returned_content_type": "image/png"},
     {   "name": "rar2list",
