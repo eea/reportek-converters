@@ -15,6 +15,11 @@ if __name__ == '__main__':
         'src_file',
         metavar='src-file',
         help='path to gml file')
+    parser.add_argument(
+        '-t',
+        '--thumb',
+        metavar='generate a thumbnail',
+        help='generate thumbnail only')
     arguments = parser.parse_args()
     with NamedTemporaryFile() as gtiff_file:
         rasterize_command_string = ('gdal_rasterize -q'
