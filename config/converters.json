@@ -102,7 +102,7 @@
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
         "returned_content_type": "image/png"},
     {   "name": "gmltopng_thumb",
-        "command": "python ./bin/gml_to_png_thumbnail.py --gml {0}",
+        "command": "python ./bin/gdal_gml_to_png.py --thumb {0}",
         "accepted_content_types": ["text/xml"],
         "title": "View map as PNG image (thumbnail without background)",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
