@@ -7,6 +7,8 @@ import os
 
 from tempfile import NamedTemporaryFile
 
+import constants
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
                 description='Convert gml file to png.')
@@ -19,10 +21,13 @@ if __name__ == '__main__':
         with NamedTemporaryFile() as gtiff_file:
             rasterize_command_string = ('gdal_rasterize'
                                             ' -burn 255 -burn 0 -burn 0'
-                                            ' -of GTiff -ts 100 100 {0} {1}')
-            rasterize_command = rasterize_command_string.format(
-                                    arguments.src_file,
-                                    gtiff_file.name)
+                                            ' -of GTiff -ts {width} {height}'
+                                            ' {src} {dst}')
+            rasterize_command = rasterize_command_string.format(**{
+                                    'width': constants.IMAGE_WIDTH,
+                                    'height': constants.IMAGE_HEIGHT,
+                                    'src': arguments.src_file,
+                                    'dst': gtiff_file.name})
             subprocess.call(
                     rasterize_command,
                     stdout=fnull,
