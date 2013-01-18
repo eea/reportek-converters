@@ -31,7 +31,7 @@
     {   "name": "ziplist",
         "command": "unzip -l {0}",
         "accepted_content_types": ["application/x-zip-compressed",
-         "application/zip"],
+         "application/zip", "application/x-zip"],
         "title": "List of contents",
         "returned_content_type": "text/plain;charset=utf-8"},
     {   "name": "msword2text",
