@@ -2,6 +2,8 @@
 import flask
 import json
 import subprocess
+import tempfile
+import path
 from path import path
 import logging
 
@@ -27,10 +29,13 @@ def call(converter_id, filename, extra_args=[]):
     if converter:
         command = converter.command
         try:
+            tmp_dir = tempfile.mkdtemp(prefix="tmp")
             response = subprocess.check_output(
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
+                           cwd=tmp_dir,
                            shell=True)
+            path(tmp_dir).rmtree()
             return response
         except subprocess.CalledProcessError as exp:
             cexp = ConversionError()
