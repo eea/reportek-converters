@@ -4,6 +4,7 @@ import json
 import subprocess
 import tempfile
 import path
+import os
 from path import path
 import logging
 
@@ -34,6 +35,7 @@ def call(converter_id, filename, extra_args=[]):
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
                            cwd=tmp_dir,
+                           env={'SCRIPTS': path(os.getcwd()) / 'bin'},
                            shell=True)
             path(tmp_dir).rmtree()
             return response
