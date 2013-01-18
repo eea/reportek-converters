@@ -35,7 +35,9 @@ def call(converter_id, filename, extra_args=[]):
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
                            cwd=tmp_dir,
-                           env={'SCRIPTS': path(os.getcwd()) / 'bin'},
+                           env={'SCRIPTS': path(os.getcwd()) / 'bin',
+                                'LIB': path(os.getcwd()) / 'lib'
+                               },
                            shell=True)
             path(tmp_dir).rmtree()
             return response
