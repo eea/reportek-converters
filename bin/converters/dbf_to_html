@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import argparse
+import sys
+from jinja2 import Template
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+                description='Convert dbf file to html.')
+    parser.add_argument(
+        'src_file',
+        metavar='src-file',
+        help='path to dbf file')
+    params = parser.parse_args()
+    template = Template('test')
+    sys.stdout.write(template.render(dbf='test'))
