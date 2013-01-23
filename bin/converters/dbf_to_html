@@ -23,16 +23,40 @@ if __name__ == '__main__':
         table = dbf.Table(tmp.name).open()
         table.use_deleted = False
         attrs = table.field_names
-        results = []
+        records = []
         for record in table:
-            tmp = {}
+            tmp = []
             for attr in attrs:
                 try:
                     value = record[attr]
                 except UnicodeDecodeError as exp:
-                    value = exp.args[1].strip().decode('latin-1')
-                tmp.update({attr: value.strip()})
-            results.append(tmp)
+                    value = exp.args[1].decode('latin-1')
+                tmp.append(unicode(value))
+            records.append(tmp)
 
-        template = Template('test')
-        sys.stdout.write(template.render(dbf='test'))
+        template = Template(
+                    '<!DOCTYPE html>'
+                    '<html lang="en">'
+                       '<head>'
+                         '<meta charset="utf-8">'
+                         '<title>Display {{ file_name }} as HTML table</title>'
+                       '</head>'
+                       '<body>'
+                         '<table border="1">'
+                           '<tr>'
+                               '{% for name in field_names %}'
+                                   '<th>{{ name }}</th>'
+                               '{% endfor %}'
+                           '</tr>'
+                             '{% for row in records %}'
+                               '<tr>'
+                                 '{% for value in row %}'
+                                   '<td>{{ value }}</td>'
+                                 '{% endfor %}'
+                               '</tr>'
+                             '{% endfor %}'
+                         '</table>'
+                       '</body>'
+                    '</html>')
+        output = template.render(field_names=attrs, records=records)
+        sys.stdout.write(output)
