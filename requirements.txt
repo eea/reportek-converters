@@ -7,3 +7,4 @@ BeautifulSoup==3.2.1
 dbf==0.94.005
 Jinja2==2.6
 argparse==1.2.1
+scrubber==1.6.1
