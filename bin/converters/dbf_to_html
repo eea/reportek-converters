@@ -5,8 +5,12 @@ import sys
 import dbf
 import tempfile
 import encodings
+import time
 from jinja2 import Template
 from BeautifulSoup import BeautifulSoup as bs
+
+class DurationException(Exception):
+    """ """
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -26,17 +30,26 @@ if __name__ == '__main__':
         table.use_deleted = False
         attrs = table.field_names
         records = []
-        for record in table:
-            tmp = []
-            for attr in attrs:
-                try:
-                    value = record[attr]
-                except UnicodeDecodeError as exp:
-                    table._meta.decoder = encodings.codecs.latin_1_decode
-                    value = record[attr]
-                assert(isinstance(value, unicode))
-                tmp.append(value.strip())
-            records.append(tmp)
+        start = time.time()
+        limited = False
+        try:
+            for record in table:
+                tmp = []
+                for attr in attrs:
+                    try:
+                        value = unicode(record[attr])
+                    except UnicodeDecodeError as err:
+                        table._meta.decoder = encodings.codecs.latin_1_decode
+                        value = unicode(record[attr])
+                    except ValueError as err:
+                        pass
+                    tmp.append(value.strip())
+                records.append(tmp)
+                duration = time.time() - start
+                if duration>=0.01:
+                    raise DurationException() #limit extraction to 1/10 sec
+        except DurationException:
+            limited = True
 
         template = Template(
                     '<!DOCTYPE html>'
@@ -46,6 +59,9 @@ if __name__ == '__main__':
                          '<title>Display as HTML</title>'
                        '</head>'
                        '<body>'
+                       '{% if limited %}'
+                       '<p>WARNING: Limited to {{ records|length }} records.</p>'
+                       '{% endif %}'
                          '<table border="1">'
                            '<tr>'
                                '{% for name in field_names %}'
@@ -62,6 +78,9 @@ if __name__ == '__main__':
                          '</table>'
                        '</body>'
                     '</html>')
-        output = template.render(field_names=attrs, records=records)
+        output = template.render(
+                    field_names=attrs,
+                    records=records,
+                    limited=limited)
         pretty_output = bs(output).prettify()
         sys.stdout.write(pretty_output)
