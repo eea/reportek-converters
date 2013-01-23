@@ -184,5 +184,10 @@
          "application/vnd.ms-powerpoint",
          "application/vnd.ms-excel"],
         "title": "View as HTML",
+        "returned_content_type": "text/html;charset=UTF-8"},
+    {   "name": "safe_html",
+        "command": "$SCRIPTS/converters/safe_html {0}",
+        "accepted_content_types": ["text/html"],
+        "title": "Sanitize HTML",
         "returned_content_type": "text/html;charset=UTF-8"}
 ]
