@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import argparse
 import sys
+import dbf
+import tempfile
 from jinja2 import Template
 
 if __name__ == '__main__':
@@ -12,5 +14,25 @@ if __name__ == '__main__':
         metavar='src-file',
         help='path to dbf file')
     params = parser.parse_args()
-    template = Template('test')
-    sys.stdout.write(template.render(dbf='test'))
+
+    #dbf module needs a file with extension
+    with tempfile.NamedTemporaryFile(suffix=".dbf", mode="w+b") as tmp:
+        data = open(params.src_file, 'rb').read()
+        tmp.file.write(data)
+        tmp.file.flush()
+        table = dbf.Table(tmp.name).open()
+        table.use_deleted = False
+        attrs = table.field_names
+        results = []
+        for record in table:
+            tmp = {}
+            for attr in attrs:
+                try:
+                    value = record[attr]
+                except UnicodeDecodeError as exp:
+                    value = exp.args[1].strip().decode('latin-1')
+                tmp.update({attr: value.strip()})
+            results.append(tmp)
+
+        template = Template('test')
+        sys.stdout.write(template.render(dbf='test'))
