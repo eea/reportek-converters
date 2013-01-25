@@ -43,6 +43,22 @@ def converters_params():
         response.update({'prefix': prefix})
     return flask.jsonify(response)
 
+@web.route("/params/<string:name>", methods=["GET"])
+def specific_params(name=None):
+    if name in list_converters():
+        converter = converters.get(name)
+        output = {
+            'id': converter.name,
+            'title': converter.title,
+            'convert_url': 'convert/%s' %(converter.name),
+            'ct_input': converter.ct_input,
+            'ct_output': converter.ct_output,
+            'ct_schema': converter.ct_schema,
+            'ct_extraparams': converter.extraparams,
+            'description': converter.description,
+            'suffix': ''
+        }
+        return flask.jsonify(output)
 
 @web.route("/convert/<string:name>", methods=["POST"])
 def convert(name):
