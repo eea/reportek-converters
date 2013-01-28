@@ -80,6 +80,10 @@ def convert(name):
             extra_params = flask.request.args.values()
         try:
             response = call(name, tmp.name, list(extra_params))
+            if (converters[name].returned_content_type in
+                [u'text/html;charset=UTF-8', 'text/html',
+                 "text/plain;charset=utf-8", "text/plain"]):
+                response = response.decode('latin-1')
         except ConversionError as exp:
             response = base64.b64encode(exp.output)
             status = 500
