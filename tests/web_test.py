@@ -212,9 +212,8 @@ class WebTest(unittest.TestCase):
     def test_rar2list2(self):
         self.assertResponse('fisier.txt', 'tests/rar_data/onefile.rar')
 
-    @unittest.skip('missing dbflib.py') #TODO implement later
     def test_dbf_as_html(self):
-        self.assertResponse('fisier.txt', 'tests/dbf_data/test.dbf')
+        self.assertResponse('track_id', 'tests/dbf_data/test.dbf')
 
     def test_prj_as_html(self):
         self.assertResponse('Lambert_Conformal_Conic', 'tests/prj_data/test.prj')
