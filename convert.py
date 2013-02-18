@@ -37,7 +37,10 @@ def call(converter_id, filename, extra_args=[]):
                            cwd=tmp_dir,
                            env=dict(os.environ,
                                     SCRIPTS=path(os.getcwd()) / 'bin',
-                                    LIB=path(os.getcwd()) / 'lib'),
+                                    LIB=path(os.getcwd()) / 'lib',
+                                    TMPDIR = tmp_dir,
+                                    TEMP = tmp_dir,
+                                    TMP = tmp_dir),
                            shell=True)
             path(tmp_dir).rmtree()
             return response

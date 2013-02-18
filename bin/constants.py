@@ -26,8 +26,7 @@ __doc__ = """
 from os import getenv
 
 EXTENSIONS = ['.dbf', '.shp', '.shx', '.xml', '.prj']
-#FILES_PATH = getenv('TEMP')
-FILES_PATH = '/tmp'
+FILES_PATH = getenv('TMPDIR')
 
 # draw colors
 OUTLINE_RGB = 'rgb(255,0,0)'
