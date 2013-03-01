@@ -69,6 +69,7 @@
         "command": "python $SCRIPTS/flash_ext_png.py --gml {0} --minx {1} --miny {2} --maxx {3} --maxy {4} --server {5} --service {6}",
         "accepted_content_types": ["text/xml"],
         "title": "Flash print extension",
+        "ct_schema": "XXXXXXXXXXXXXX",
         "returned_content_type": "image/png"},
     {   "name": "gmltoflash",
         "command": "flash_document",
