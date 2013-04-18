@@ -78,8 +78,25 @@ def convert(name):
         extra_params = flask.request.form.values()
         if not extra_params:
             extra_params = flask.request.args.values()
+        needs_additional_files = getattr(converters.get(name), 'additional_files', False)
         try:
-            response = call(name, tmp.name, list(extra_params))
+            if needs_additional_files:
+                shx_doc = getattr(flask.request.files.get('shx'), 'stream', None)
+                dbf_doc = getattr(flask.request.files.get('dbf'), 'stream', None)
+                tmp_shx = tempfile.NamedTemporaryFile()
+                tmp_dbf = tempfile.NamedTemporaryFile()
+                tmp_shx.file.write(shx_doc.read())
+                tmp_dbf.file.write(dbf_doc.read())
+                tmp_shx.file.flush()
+                tmp_dbf.file.flush()
+                tmp_shx.file.seek(0)
+                tmp_dbf.file.seek(0)
+                extra_params+=[tmp_shx.name, tmp_dbf.name]
+                response = call(name, tmp.name, list(extra_params))
+                tmp_shx.close()
+                tmp_dbf.close()
+            else:
+                response = call(name, tmp.name, list(extra_params))
         except ConversionError as exp:
             response = base64.b64encode(exp.output)
             status = 500
