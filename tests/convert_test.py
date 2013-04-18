@@ -36,3 +36,20 @@ class ConvertTest(unittest.TestCase):
         self.assertEqual(
             ['country_code'],
             converters['mock_converter'].extraparams)
+
+    @patch('convert.json')
+    def test_additional_files_param(self, mock_json):
+        mock_json.loads = Mock(return_value=
+            [{  "name": "mock_converter",
+                "command": "command --arg {0} --extra_arg {1}",
+                "accepted_content_types": ["text/xml"],
+                "title": "View map as PNG image (thumbnail with background)",
+                "returned_content_type": "image/png",
+                "extraparams": ["country_code"],
+                "additional_files": True
+            }]
+        )
+        from convert import init_converters
+        converters = init_converters()
+        conv = converters['mock_converter']
+        self.assertEqual(conv.additional_files, True)
