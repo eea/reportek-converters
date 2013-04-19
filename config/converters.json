@@ -159,7 +159,7 @@
         "title": "Show shapefile metadata",
         "returned_content_type": "text/plain;charset=UTF-8"},
     {   "name": "shp2img",
-        "command": "$SCRIPTS/converters/shp_to_img.sh {0} {1} {2}",
+        "command": "$SCRIPTS/gdal_gml_to_png.py {0} --shx {1} --dbf {2}",
         "accepted_content_types": ["application/x-shp"],
         "title": "Show shapefile as image",
         "returned_content_type": "image/jpeg",
