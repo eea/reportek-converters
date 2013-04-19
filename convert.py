@@ -99,12 +99,14 @@ class Converter(object):
                 title='',
                 extraparams=[],
                 description = '',
-                ct_schema=''):
+                ct_schema='',
+                additional_files=None):
         self.name = name
         self.command = command
         self.accepted_content_types = accepted_content_types #lista
         self.returned_content_type = returned_content_type
         self.extraparams = extraparams
+        self.additional_files = additional_files
         self.__compatibility__init__(title,
                                      ct_schema,
                                      description)
