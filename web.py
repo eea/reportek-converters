@@ -67,7 +67,7 @@ def convert(name):
     if not document:
         import StringIO
         document = StringIO.StringIO(flask.request.data)
-    with tempfile.NamedTemporaryFile() as tmp:
+    with tempfile.NamedTemporaryFile(delete=False) as tmp:
         chunk = True
         while chunk:
             chunk = document.read(10)
@@ -108,6 +108,8 @@ def convert(name):
         else:
             status = 200
             content_type = converters.get(name).ct_output
+        finally:
+            os.remove(tmp.name)
     duration = time.time() - start
     log_details = {
         'name': name,
