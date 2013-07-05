@@ -29,8 +29,8 @@ def call(converter_id, filename, extra_args=[]):
     converter = converters.get(converter_id, None)
     if converter:
         command = converter.command
+        tmp_dir = tempfile.mkdtemp(prefix="tmp")
         try:
-            tmp_dir = tempfile.mkdtemp(prefix="tmp")
             response = subprocess.check_output(
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
@@ -42,7 +42,6 @@ def call(converter_id, filename, extra_args=[]):
                                     TEMP = tmp_dir,
                                     TMP = tmp_dir),
                            shell=True)
-            path(tmp_dir).rmtree()
             return response
         except subprocess.CalledProcessError as exp:
             cexp = ConversionError()
@@ -59,6 +58,8 @@ def call(converter_id, filename, extra_args=[]):
             else:
                 conversion_log.warning(message %(converter_id, exp.output))
             raise cexp
+        finally:
+            path(tmp_dir).rmtree()
     else:
         raise NotImplementedError
 
