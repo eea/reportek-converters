@@ -197,5 +197,5 @@
         "accepted_content_types": ["text/xml"],
         "title": "Convert CDDA XML sites.xml to SVG format",
         "ct_schema": "http://dd.eionet.europa.eu/GetSchema?id=TBL8292",
-        "returned_content_type": "image/svg+xml"},
+        "returned_content_type": "image/svg+xml"}
 ]
