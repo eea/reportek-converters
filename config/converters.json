@@ -193,7 +193,7 @@
         "title": "Sanitize HTML",
         "returned_content_type": "text/html;charset=UTF-8"},
     {   "name": "cdda_xml2svg",
-        "command": "/var/local/cdda-spatialite/check_CDDA_tabular.sh {0} -c",
+        "command": "/var/local/cdda-spatialite/check_CDDA_tabular.sh {0} -c svg",
         "accepted_content_types": ["text/xml"],
         "title": "Convert CDDA XML sites.xml to SVG format",
         "ct_schema": "http://dd.eionet.europa.eu/GetSchema?id=TBL8292",
