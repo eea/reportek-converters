@@ -1,0 +1,18 @@
+xgawk -f ~/scripts/map_files_xmlrpc.awk None.xml |
+
+awk '
+/^(R|L)W/ {
+	pre = $6 FS $7 FS
+	a[pre FS "SW_XML"]  = $8 FS $9
+	a[pre FS $1 "_SHP"] = $10 FS $11
+}
+END {
+	for (i in a)
+		print i, a[i] }' |
+
+awk '{	printf "%s%-6s  %-12s  %s  %-40s  %-s\n",
+	($1 == p1 && $2 == p2 ? "" : "\n"), $1, $2, $3, $4, $5
+	p1 = $1
+	p2 = $2 }' |
+
+mail -s mappings hermann.peifer@eea.europa.eu

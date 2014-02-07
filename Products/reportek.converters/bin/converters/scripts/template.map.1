@@ -1,0 +1,106 @@
+MAP
+#	SIZE		800 600
+	SIZE		1024 768
+	EXTENT		map_extent
+	SYMBOLSET	/home/peifer/scripts/symbols.txt
+	IMAGETYPE	PNG
+	UNITS		DD
+
+	PROJECTION
+		"init=epsg:4326"
+	END
+
+	WEB
+		IMAGEPATH	/var/tmp
+	END
+
+	LEGEND
+		STATUS		EMBED
+		POSITION	LL
+	END
+
+	SCALEBAR
+		STATUS		EMBED
+		UNITS		KILOMETERS
+		OUTLINECOLOR	0 0 0
+		INTERVALS	2
+		POSITION	LR
+	END
+
+
+	# Background image first
+	LAYER
+		NAME		"demis.nl"
+		TYPE		RASTER
+		STATUS		ON
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+
+		CONNECTIONTYPE	WMS
+		# CONNECTION	"http://www2.demis.nl/mapserver/request.asp?"
+		CONNECTION	"http://www2.demis.nl/wms/wms.ashx?WMS=WorldMap"
+
+			METADATA
+				"wms_server_version"	"1.1.0"
+				"wms_srs"		"EPSG:4326"
+				"wms_format"		"image/gif"
+				"wms_name"		"Bathymetry,Countries,Topography,Hillshading,Builtup areas,Coastlines,Borders,Waterbodies,Cities"
+				"wms_style"		""
+				"wms_latlonboundingbox"	"map_extent"
+				"wms_width"		"1024"
+				"wms_height"		"768"
+			END
+	END
+
+	# Then the shapefile from Reportnet
+	LAYER
+		NAME	"Shapefile"
+		TYPE	shp_type
+		STATUS	ON
+
+		CONNECTIONTYPE	OGR
+		CONNECTION	"gmt_file"
+
+	#	DATA	"shp_file"
+
+		PROJECTION
+			shp_proj
+		END
+
+		CLASS
+			NAME	"Shapefile feature (fc)"
+
+			STYLE
+				OUTLINECOLOR	255 0 0
+				# point layer?
+			END
+		END
+	END
+
+	# Extent from shapefile, as line
+	LAYER
+		NAME	"BBOX"
+		TYPE	LINE
+		STATUS	ON
+
+		PROJECTION
+			shp_proj
+		END
+
+		FEATURE
+			POINTS
+				shp_extent
+			END
+		END
+
+		CLASS
+			NAME	"Shapefile bounding box"
+
+			STYLE
+				OUTLINECOLOR	0 0 255
+			END
+		END
+	END
+END

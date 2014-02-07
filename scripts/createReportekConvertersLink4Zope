@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import os
+import os.path
+import sys
+
+zope_dir = os.path.dirname(sys.argv[0])
+# make sure you provide ${buildout:eggs-directory} when calling from buildout
+if len(sys.argv) > 1:
+    zope_eggs_dir = sys.argv[1]
+else:
+    zope_eggs_dir = os.path.join(zope_dir, 'eggs')
+link_name = os.path.join(zope_eggs_dir, 'reportek.converters.egg')
+
+reportek_egg_dir = None
+for d in sys.path:
+    if 'reportek.converters-' in d:
+        reportek_egg_dir = os.path.join(zope_eggs_dir, d)
+        break
+
+if not reportek_egg_dir:
+    raise RuntimeError(("Could not find reportek.covertes egg path"
+                        "in buildout script %s. "
+                        "Is reportek.converters being installed?") % sys.argv[0])
+try:
+    os.unlink(link_name)
+except:
+    pass
+# let us see any exceptions that are being thrown here
+os.symlink(reportek_egg_dir, link_name)
