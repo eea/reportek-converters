@@ -1,5 +1,9 @@
-1.1 (unreleased)
+1.2 (unreleased)
 ----------------
+
+1.1 (2014-03-07)
+----------------
+* Prevent safe_html from stripping i18n tags
 
 1.0 (2014-02-07)
 ----------------

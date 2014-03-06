@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='reportek.converters',
-      version='1.0',
+      version='1.2',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://cdr.eionet.europa.eu/',
@@ -17,7 +17,7 @@ setup(name='reportek.converters',
           'Flask>=0.9',
           'Flask-Script>=0.4.0',
           'dbf>=0.94.005',
-          'Jinja2>=2.6',
+          'Jinja2>=2.5',
           'argparse',
           'scrubber>=1.6.1',
       ],

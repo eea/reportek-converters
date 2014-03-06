@@ -3,7 +3,48 @@
 import argparse
 import sys
 from scrubber import Scrubber
-from BeautifulSoup import BeautifulSoup as bs
+from BeautifulSoup import BeautifulSoup as bs, Comment
+
+class ReportekFeedbackScrubber(Scrubber):
+    # we might need all i18n and tal/metal attributes added here...
+    allowed_attributes = Scrubber.allowed_attributes | set(('i18n:translate',))
+    ignore_empty_attr = False
+
+    def strip_disallowed(self, soup):
+        """Remove nodes and attributes from the soup that aren't specifically allowed."""
+        toremove = []
+        for node in soup.recursiveChildGenerator():
+            if self.remove_comments and isinstance(node, Comment):
+                toremove.append((False, node))
+                continue
+
+            if isinstance(node, basestring):
+                continue
+
+            # Remove disallowed tags
+            if node.name not in self.allowed_tags:
+                toremove.append((node.name in self.disallowed_tags_save_content, node))
+                continue
+
+            # Remove disallowed attributes
+            attrs = []
+            for k, v in node.attrs:
+                if not v and self.ignore_empty_attr:
+                    continue
+
+                if k.lower() not in self.allowed_attributes:
+                    continue
+
+                # TODO: This probably needs to be more robust
+                v2 = v.lower()
+                if any(x in v2 for x in ('javascript:', 'vbscript:', 'expression(')):
+                    continue
+
+                attrs.append((k,v))
+            node.attrs = attrs
+
+        self._remove_nodes(toremove)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -14,7 +55,8 @@ if __name__ == '__main__':
         help='path to html file')
     params = parser.parse_args()
     with open(params.src_file, 'rb') as src_file:
-        scrubber = Scrubber(autolink=True)
+        scrubber = ReportekFeedbackScrubber(autolink=True)
+        #scrubber = Scrubber(autolink=True)
         output = scrubber.scrub(src_file.read())
         pretty_output = bs(output).prettify()
         sys.stdout.write(pretty_output)
