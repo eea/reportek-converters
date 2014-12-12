@@ -1,2 +1,4 @@
 *.pyc
 autonose.py
+reportek.converters.egg-info/
+setuptools_git-1.1-py2.7.egg
