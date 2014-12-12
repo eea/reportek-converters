@@ -7,6 +7,7 @@ import path
 import os
 from path import path
 import logging
+import sys
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p')
@@ -31,6 +32,7 @@ def call(converter_id, filename, extra_args=[]):
         command = converter.command
         tmp_dir = tempfile.mkdtemp(prefix="tmp")
         try:
+            virtualenv_aware_path = os.path.dirname( sys.executable)+':'+os.environ.get('PATH')
             response = subprocess.check_output(
                            command.format(*format_params),
                            stderr=subprocess.STDOUT,
@@ -40,7 +42,8 @@ def call(converter_id, filename, extra_args=[]):
                                     LIB=path(os.getcwd()) / 'lib',
                                     TMPDIR = tmp_dir,
                                     TEMP = tmp_dir,
-                                    TMP = tmp_dir),
+                                    TMP = tmp_dir,
+                                    PATH=virtualenv_aware_path),
                            shell=True)
             return response
         except subprocess.CalledProcessError as exp:
