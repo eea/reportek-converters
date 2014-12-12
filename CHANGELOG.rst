@@ -1,5 +1,6 @@
-1.2 (unreleased)
+1.1.1 (2014-12-12)
 ----------------
+* Preserve virtual environment across python subprocesses [baragdan]
 
 1.1 (2014-03-07)
 ----------------
