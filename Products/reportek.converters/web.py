@@ -81,20 +81,27 @@ def convert(name):
         needs_additional_files = getattr(converters.get(name), 'additional_files', False)
         try:
             if needs_additional_files:
+                filepath = '.'.join([tmp.name, 'shp'])
+                os.link(tmp.name, filepath)
                 shx_doc = getattr(flask.request.files.get('shx'), 'stream', None)
                 dbf_doc = getattr(flask.request.files.get('dbf'), 'stream', None)
-                tmp_shx = tempfile.NamedTemporaryFile()
-                tmp_dbf = tempfile.NamedTemporaryFile()
-                tmp_shx.file.write(shx_doc.read())
-                tmp_dbf.file.write(dbf_doc.read())
-                tmp_shx.file.flush()
-                tmp_dbf.file.flush()
-                tmp_shx.file.seek(0)
-                tmp_dbf.file.seek(0)
-                extra_params+=[tmp_shx.name, tmp_dbf.name]
-                response = call(name, tmp.name, list(extra_params))
+                shx_filepath = '.'.join([tmp.name, 'shx'])
+                dbf_filepath = '.'.join([tmp.name, 'dbf'])
+                tmp_shx = open(shx_filepath, 'w')
+                tmp_dbf = open(dbf_filepath, 'w')
+                tmp_shx.write(shx_doc.read())
+                tmp_dbf.write(dbf_doc.read())
+                tmp_shx.flush()
+                tmp_dbf.flush()
+                tmp_shx.seek(0)
+                tmp_dbf.seek(0)
+                extra_params+=[shx_filepath, dbf_filepath]
+                response = call(name, filepath, list(extra_params))
                 tmp_shx.close()
                 tmp_dbf.close()
+                os.unlink(filepath)
+                os.unlink(shx_filepath)
+                os.unlink(dbf_filepath)
             else:
                 response = call(name, tmp.name, list(extra_params))
         except ConversionError as exp:
