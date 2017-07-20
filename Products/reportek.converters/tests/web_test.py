@@ -227,13 +227,6 @@ class WebTest(unittest.TestCase):
     def test_tohtml(self):
         self.assertResponse('Correction on releases', 'tests/xlsx_data/test.xlsx')
 
-    @unittest.skip('missing ogr2ogr') #TODO implement later
-    def test_shp2kml(self):
-        self.assertResponse('command not found',
-                                 'tests/shp_data/test.shp',
-                                 self.assertNotIn)
-        self.assertResponse('<kml', 'tests/shp_data/test.shp')
-
     @unittest.skip('command error') #TODO implement later
     def test_shp_info(self):
         self.assertResponse('<kml', 'tests/shp_data/test.shp')
