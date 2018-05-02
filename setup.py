@@ -14,7 +14,7 @@ setup(name='reportek.converters',
       install_requires=[
           'path.py>=2.3',
           'Pillow>=1.7.7',
-          'Flask>=0.9',
+          'Flask==0.9',
           'Flask-Script>=0.4.0',
           'dbf>=0.94.005',
           'Jinja2>=2.5',
