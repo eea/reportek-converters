@@ -193,5 +193,10 @@
         "accepted_content_types": ["text/xml"],
         "title": "Convert CDDA XML sites.xml to SVG format",
         "ct_schema": "http://dd.eionet.europa.eu/GetSchema?id=TBL8292",
-        "returned_content_type": "image/svg+xml"}
+        "returned_content_type": "image/svg+xml"},
+    {   "name": "mmr_p_xls_xml",
+        "command": "python -W ignore $SCRIPTS/mmr_p_xls_xml.py {0}",
+        "accepted_content_types": ["application/vnd.ms-excel.sheet.macroEnabled.12"],
+        "title": "Convert MMR Projections XLS to XML",
+        "returned_content_type": "text/xml"}
 ]
