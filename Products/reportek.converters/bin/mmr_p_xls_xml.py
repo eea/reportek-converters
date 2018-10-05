@@ -20,12 +20,41 @@ __doc__ = """
     MMR Projections XLS to XML converter module.
 """
 
+from decimal import Decimal
 from lxml import etree
+import xml.etree.ElementTree as ET
 from openpyxl import load_workbook
 from openpyxl.utils.cell import range_boundaries
 from utils import utOpen
 import argparse
+import requests
 import sys
+from cachetools import cached, TTLCache
+cache = TTLCache(maxsize=100, ttl=3600)
+SCHEMA = "http://dd.eionet.europa.eu/schemas/mmr-projections/projections-Article23table1v6.XSD"
+
+
+@cached(cache)
+def get_schema(url):
+    try:
+        response = requests.get(url, verify=False)
+    except Exception as e:
+        return None
+    if response.status_code != requests.codes.ok:
+        return None
+
+    tree = etree.fromstring(response.content)
+    return tree
+
+
+def get_cat_tag(name, nsmap=None):
+    tree = get_schema(SCHEMA)
+    if not nsmap:
+        nsmap = {'xsd': 'http://www.w3.org/2001/XMLSchema'}
+    xpath = ".//xsd:enumeration[xsd:annotation/xsd:documentation='{}']".format(name)
+    elems = tree.xpath(xpath, namespaces=nsmap)
+    if len(elems) == 1:
+        return elems[0].attrib['value']
 
 
 def get_name_boundaries(wb, name):
@@ -45,12 +74,12 @@ def mmr_p_xls_to_xml(xls):
     gu_coords = get_name_boundaries(wb, 'AGasUnits')
     # Set up the QNAME
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
-    noschema = "http://dd.eionet.europa.eu/schemas/mmr-projections/projections-Article23table1v6.XSD"
     attr_qname = etree.QName("http://www.w3.org/2001/XMLSchema-instance",
                              "noNamespaceSchemaLocation")
+    nsmap = {'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
     root = etree.Element("ProjectionsTable1",
-                         {attr_qname: noschema},
-                         nsmap={'xsi': 'http://www.w3.org/2001/XMLSchema-instance'})
+                         {attr_qname: SCHEMA},
+                         nsmap=nsmap)
     isy = etree.Element("Inventory_Submission_year")
     isy.text = str(ws.cell(row=14, column=2).value)
     ms = etree.Element("MS")
@@ -68,7 +97,7 @@ def mmr_p_xls_to_xml(xls):
                 root.append(rowxml)
                 cur_col = row[idx].col_idx
                 cat = etree.Element("Category__1_3")
-                cat.text = catv
+                cat.text = get_cat_tag(catv)
                 rowxml.append(cat)
                 year = etree.Element("Year")
                 # Grab the year tag for the current column
@@ -81,10 +110,14 @@ def mmr_p_xls_to_xml(xls):
                 # Grab the gas unit tag for the current column
                 gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
                 rowxml.append(gu)
-                nk = etree.Element("NK")
-                rowxml.append(nk)
                 val = etree.Element("Value")
-                val.text = value
+                nk = etree.Element("NK")
+                try:
+                    value = Decimal(value)
+                    val.text = value.to_eng_string()
+                except:
+                    nk.text = value
+                rowxml.append(nk)
                 rowxml.append(val)
 
     return etree.tostring(root, xml_declaration=True,
