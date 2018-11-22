@@ -69,9 +69,12 @@ def mmr_p_xls_to_xml(xls):
     # We only convert the first sheet
     ws = wb.worksheets[0]
     # Grab the ranges for the tags
-    val_coords = get_name_boundaries(wb, 'Values')
-    years_coords = get_name_boundaries(wb, 'AYears')
-    gu_coords = get_name_boundaries(wb, 'AGasUnits')
+    try:
+        val_coords = get_name_boundaries(wb, 'Values')
+        years_coords = get_name_boundaries(wb, 'AYears')
+        gu_coords = get_name_boundaries(wb, 'AGasUnits')
+    except:
+        return ''
     # Set up the QNAME
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
     attr_qname = etree.QName("http://www.w3.org/2001/XMLSchema-instance",

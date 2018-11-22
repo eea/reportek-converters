@@ -196,7 +196,12 @@
         "returned_content_type": "image/svg+xml"},
     {   "name": "mmr_p_xls_xml",
         "command": "python -W ignore $SCRIPTS/mmr_p_xls_xml.py {0}",
-        "accepted_content_types": ["application/vnd.ms-excel.sheet.macroEnabled.12"],
+        "accepted_content_types": ["application/vnd.ms-excel.sheet.macroEnabled.12",
+         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+         "application/vnd.oasis.opendocument.spreadsheet",
+         "application/vnd.ms-powerpoint",
+         "application/vnd.ms-excel"
+        ],
         "title": "Convert MMR Projections XLS to XML",
         "returned_content_type": "text/xml"}
 ]
