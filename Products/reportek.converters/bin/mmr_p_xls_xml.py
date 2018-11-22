@@ -92,7 +92,6 @@ def mmr_p_xls_to_xml(xls):
         for idx in range(val_coords[0]-1, val_coords[2]):
             value = row[idx].value
             if value is not None:
-                value = str(value)
                 rowxml = etree.Element("Row")
                 root.append(rowxml)
                 cur_col = row[idx].col_idx
@@ -112,11 +111,10 @@ def mmr_p_xls_to_xml(xls):
                 rowxml.append(gu)
                 val = etree.Element("Value")
                 nk = etree.Element("NK")
-                try:
-                    value = Decimal(value)
-                    val.text = value.to_eng_string()
-                except:
-                    nk.text = value
+                if isinstance(value, str) or isinstance(value, unicode):
+                    val.text = value
+                else:
+                    val.text = repr(value)
                 rowxml.append(nk)
                 rowxml.append(val)
 
