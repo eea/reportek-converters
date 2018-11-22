@@ -112,7 +112,7 @@ def mmr_p_xls_to_xml(xls):
                 val = etree.Element("Value")
                 nk = etree.Element("NK")
                 if isinstance(value, str) or isinstance(value, unicode):
-                    val.text = value
+                    nk.text = value
                 else:
                     val.text = repr(value)
                 rowxml.append(nk)
