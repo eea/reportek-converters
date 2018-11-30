@@ -203,5 +203,12 @@
          "application/vnd.ms-excel"
         ],
         "title": "Convert MMR Projections XLS to XML",
+        "internal": true,
+        "returned_content_type": "text/xml"},
+    {   "name": "xml_to_json",
+        "command": "python -W ignore $SCRIPTS/xml_to_json.py {0} {1}",
+        "accepted_content_types": ["text/xml"],
+        "title": "XML to JSON",
+        "internal": true,
         "returned_content_type": "text/xml"}
 ]
