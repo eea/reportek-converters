@@ -104,7 +104,8 @@ class Converter(object):
                 extraparams=[],
                 description = '',
                 ct_schema='',
-                additional_files=None):
+                additional_files=None,
+                internal=False):
         self.name = name
         self.command = command
         self.accepted_content_types = accepted_content_types #lista
