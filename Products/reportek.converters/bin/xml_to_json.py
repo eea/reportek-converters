@@ -29,10 +29,10 @@ from copy import deepcopy
 
 
 def xml_to_json(xml, xpaths):
-
     tree = etree.parse(xml)
     root = tree.getroot()
     result = {}
+
     if not xpaths:
         result = xmltodict.parse(etree.tostring(root), process_namespaces=True)
     else:
@@ -56,7 +56,8 @@ if __name__ == '__main__':
         '--k',
         metavar='k',
         help='xpath',
-        action='append',
+        # action='append',
+        nargs="*",
         dest='k',
         default=None)
     try:
