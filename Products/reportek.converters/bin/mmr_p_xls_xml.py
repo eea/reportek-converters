@@ -89,6 +89,7 @@ def mmr_p_xls_to_xml(xls):
     ms.text = str(ws.cell(row=15, column=2).value)
     root.append(isy)
     root.append(ms)
+    gas_unit_marker = None
     for row in ws.iter_rows(min_row=val_coords[1]):
         catv = str(row[0].value).strip()
         scenariov = str(row[1].value)
@@ -104,18 +105,28 @@ def mmr_p_xls_to_xml(xls):
                 year = etree.Element("Year")
                 # Grab the year tag for the current column
                 year.text = str(ws.cell(row=years_coords[1], column=cur_col).value)
-                rowxml.append(year)
                 scenario = etree.Element("Scenario")
                 scenario.text = scenariov
-                rowxml.append(scenario)
                 gu = etree.Element("Gas___Units")
                 # Grab the gas unit tag for the current column
                 gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
+                ry = etree.Element("RY")
+                ry_val = 'false'
+                # Whenever the gas unit changes, we're dealing with a reference year
+                if gas_unit_marker != gu.text:
+                    ry_val = 'true'
+                    gas_unit_marker = gu.text
+                ry.text = ry_val
+                rowxml.append(year)
+                rowxml.append(ry)
+                rowxml.append(scenario)
                 rowxml.append(gu)
                 val = etree.Element("Value")
                 nk = etree.Element("NK")
                 if isinstance(value, str) or isinstance(value, unicode):
                     nk.text = value
+                elif isinstance(value, long):
+                    val.text = str(value)
                 else:
                     val.text = repr(value)
                 rowxml.append(nk)
