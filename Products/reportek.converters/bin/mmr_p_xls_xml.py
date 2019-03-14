@@ -124,7 +124,8 @@ def mmr_p_xls_to_xml(xls):
                 val = etree.Element("Value")
                 nk = etree.Element("NK")
                 if isinstance(value, str) or isinstance(value, unicode):
-                    nk.text = value
+                    if '#VALUE!' not in value:
+                        nk.text = value
                 elif isinstance(value, long):
                     val.text = str(value)
                 else:
