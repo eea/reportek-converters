@@ -143,7 +143,8 @@ def mmr_p_xls_to_xml(xls):
                 if is_number(value):
                     val.text = str(value)
                 else:
-                    nk.text = value
+                    if '#VALUE!' not in value:
+                        nk.text = value
                 rowxml.append(nk)
                 rowxml.append(val)
 
