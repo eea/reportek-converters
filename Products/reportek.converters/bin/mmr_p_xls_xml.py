@@ -63,6 +63,23 @@ def get_name_boundaries(wb, name):
     return range_boundaries(val)
 
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
+
+
 def mmr_p_xls_to_xml(xls):
     input_xls = utOpen(xls)
     wb = load_workbook(input_xls, data_only=True)
@@ -123,13 +140,10 @@ def mmr_p_xls_to_xml(xls):
                 rowxml.append(gu)
                 val = etree.Element("Value")
                 nk = etree.Element("NK")
-                if isinstance(value, str) or isinstance(value, unicode):
-                    if '#VALUE!' not in value:
-                        nk.text = value
-                elif isinstance(value, long):
+                if is_number(value):
                     val.text = str(value)
                 else:
-                    val.text = repr(value)
+                    nk.text = value
                 rowxml.append(nk)
                 rowxml.append(val)
 
