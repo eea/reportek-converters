@@ -110,43 +110,45 @@ def mmr_p_xls_to_xml(xls):
     for row in ws.iter_rows(min_row=val_coords[1]):
         catv = str(row[0].value).strip()
         scenariov = str(row[1].value)
-        for idx in range(val_coords[0]-1, val_coords[2]):
-            value = row[idx].value
-            if value is not None:
-                rowxml = etree.Element("Row")
-                root.append(rowxml)
-                cur_col = row[idx].col_idx
-                cat = etree.Element("Category__1_3")
-                cat.text = get_cat_tag(catv)
-                rowxml.append(cat)
-                year = etree.Element("Year")
-                # Grab the year tag for the current column
-                year.text = str(ws.cell(row=years_coords[1], column=cur_col).value)
-                scenario = etree.Element("Scenario")
-                scenario.text = scenariov
-                gu = etree.Element("Gas___Units")
-                # Grab the gas unit tag for the current column
-                gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
-                ry = etree.Element("RY")
-                ry_val = 'false'
-                # Whenever the gas unit changes, we're dealing with a reference year
-                if gas_unit_marker != gu.text:
-                    ry_val = 'true'
-                    gas_unit_marker = gu.text
-                ry.text = ry_val
-                rowxml.append(year)
-                rowxml.append(ry)
-                rowxml.append(scenario)
-                rowxml.append(gu)
-                val = etree.Element("Value")
-                nk = etree.Element("NK")
-                if is_number(value):
-                    val.text = str(value)
-                else:
-                    if '#VALUE!' not in value:
-                        nk.text = value
-                rowxml.append(nk)
-                rowxml.append(val)
+
+        if 'None' not in [catv, scenariov]:
+            for idx in range(val_coords[0]-1, val_coords[2]):
+                value = row[idx].value
+                if value is not None:
+                    rowxml = etree.Element("Row")
+                    root.append(rowxml)
+                    cur_col = row[idx].col_idx
+                    cat = etree.Element("Category__1_3")
+                    cat.text = get_cat_tag(catv)
+                    rowxml.append(cat)
+                    year = etree.Element("Year")
+                    # Grab the year tag for the current column
+                    year.text = str(ws.cell(row=years_coords[1], column=cur_col).value)
+                    scenario = etree.Element("Scenario")
+                    scenario.text = scenariov
+                    gu = etree.Element("Gas___Units")
+                    # Grab the gas unit tag for the current column
+                    gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
+                    ry = etree.Element("RY")
+                    ry_val = 'false'
+                    # Whenever the gas unit changes, we're dealing with a reference year
+                    if gas_unit_marker != gu.text:
+                        ry_val = 'true'
+                        gas_unit_marker = gu.text
+                    ry.text = ry_val
+                    rowxml.append(year)
+                    rowxml.append(ry)
+                    rowxml.append(scenario)
+                    rowxml.append(gu)
+                    val = etree.Element("Value")
+                    nk = etree.Element("NK")
+                    if is_number(value):
+                        val.text = str(value)
+                    else:
+                        if '#VALUE!' not in value:
+                            nk.text = value
+                    rowxml.append(nk)
+                    rowxml.append(val)
 
     return etree.tostring(root, xml_declaration=True,
                           encoding='UTF-8', pretty_print=True)
