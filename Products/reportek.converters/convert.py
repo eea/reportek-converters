@@ -76,22 +76,25 @@ def list_converters_params():
     app = flask.current_app
     for conv in converters.values():
         name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
-                                       name = conv.name)
+                                       name=conv.name)
         tag = app.config.get('TAG', '')
         if tag:
             title = '{title} {tag}'.format(title=conv.title,
-                                           tag='(%s)' %tag)
+                                           tag='(%s)' % tag)
         else:
             title = '{title}'.format(title=conv.title)
+
         results.append(
-            [name, #id
-             title, #title
-             'convert/%s' %(conv.name), #convert_url
-             conv.ct_input, #ct_input
-             conv.ct_output, #ct_output
-             conv.ct_schema, #ct_schema
-             conv.extraparams, #ct_extraparams
-             conv.description] #description
+            [name,  # id
+             title,  # title
+             'convert/%s' % (conv.name),  # convert_url
+             conv.ct_input,  # ct_input
+             conv.ct_output,  # ct_output
+             conv.ct_schema,  # ct_schema
+             conv.extraparams,  # ct_extraparams
+             conv.description,  # description
+             conv.suffix,  # suffix
+             conv.internal]  # internal converter (bool)
         )
     return results
 
@@ -105,6 +108,7 @@ class Converter(object):
                 description = '',
                 ct_schema='',
                 additional_files=None,
+                suffix='',
                 internal=False):
         self.name = name
         self.command = command
@@ -112,6 +116,8 @@ class Converter(object):
         self.returned_content_type = returned_content_type
         self.extraparams = extraparams
         self.additional_files = additional_files
+        self.internal = internal
+        self.suffix = suffix
         self.__compatibility__init__(title,
                                      ct_schema,
                                      description)

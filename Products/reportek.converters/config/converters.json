@@ -209,6 +209,7 @@
         "command": "python -W ignore $SCRIPTS/xml_to_json.py {0} --k {1}",
         "accepted_content_types": ["text/xml"],
         "title": "XML to JSON",
+        "internal": true,
         "returned_content_type": "text/xml",
         "extraparams": ["xpath"]
     }
