@@ -2,7 +2,7 @@ BeautifulSoup==3.2.1
 Flask-Script==2.0.6
 Flask==1.0.2
 Jinja2>=2.10
-Pillow==1.7.7
+Pillow==3.3.2
 argparse==1.1
 cachetools==2.1.0
 dbf==0.94.005
