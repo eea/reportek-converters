@@ -20,16 +20,18 @@ __doc__ = """
     MMR Projections XLS to XML converter module.
 """
 
-from decimal import Decimal
-from lxml import etree
+import argparse
+import sys
 import xml.etree.ElementTree as ET
+from decimal import Decimal
+
+import requests
+from cachetools import TTLCache, cached
+from lxml import etree
 from openpyxl import load_workbook
 from openpyxl.utils.cell import range_boundaries
 from utils import utOpen
-import argparse
-import requests
-import sys
-from cachetools import cached, TTLCache
+
 cache = TTLCache(maxsize=100, ttl=3600)
 SCHEMA = "http://dd.eionet.europa.eu/schemas/mmr-projections/projections-Article23table1v6.XSD"
 
@@ -114,10 +116,19 @@ def mmr_p_xls_to_xml(xls):
         if 'None' not in [catv, scenariov]:
             for idx in range(val_coords[0]-1, val_coords[2]):
                 value = row[idx].value
+                cur_col = row[idx].col_idx
+                gu = etree.Element("Gas___Units")
+                # Grab the gas unit tag for the current column
+                gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
+                ry_val = 'false'
+                # Whenever the gas unit changes, we're dealing with a reference year
+                if gas_unit_marker != gu.text:
+                    ry_val = 'true'
+                    gas_unit_marker = gu.text
+
                 if value is not None:
                     rowxml = etree.Element("Row")
                     root.append(rowxml)
-                    cur_col = row[idx].col_idx
                     cat = etree.Element("Category__1_3")
                     cat.text = get_cat_tag(catv)
                     rowxml.append(cat)
@@ -126,15 +137,7 @@ def mmr_p_xls_to_xml(xls):
                     year.text = str(ws.cell(row=years_coords[1], column=cur_col).value)
                     scenario = etree.Element("Scenario")
                     scenario.text = scenariov
-                    gu = etree.Element("Gas___Units")
-                    # Grab the gas unit tag for the current column
-                    gu.text = ws.cell(row=gu_coords[1], column=cur_col).value
                     ry = etree.Element("RY")
-                    ry_val = 'false'
-                    # Whenever the gas unit changes, we're dealing with a reference year
-                    if gas_unit_marker != gu.text:
-                        ry_val = 'true'
-                        gas_unit_marker = gu.text
                     ry.text = ry_val
                     rowxml.append(year)
                     rowxml.append(ry)
