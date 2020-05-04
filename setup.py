@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(name='reportek.converters',
       version='1.1.3',
@@ -13,7 +13,7 @@ setup(name='reportek.converters',
       zip_safe=False,
       install_requires=[
           'path.py>=2.3',
-          'Pillow>=1.7.7',
+          'Pillow>=6.2.2',
           'Flask>=0.12.3',
           'Flask-Script>=0.4.0',
           'dbf>=0.94.005',
@@ -33,4 +33,3 @@ setup(name='reportek.converters',
           'reportek.converters': ['lib/*'],
       },
 )
-
