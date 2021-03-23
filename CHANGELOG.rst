@@ -1,3 +1,8 @@
+1.2.1 (2021-03-23)
+------------------
+* Added MANIFEST file
+* Updated setup.py
+
 1.2.0 (2021-03-23)
 ------------------
 * Bumped lxml
