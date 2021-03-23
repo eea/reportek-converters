@@ -18,7 +18,7 @@ setup(name=NAME,
       url='https://github.com/eea/reportek-converters',
 
       setup_requires = [ "setuptools_git >= 1.0", ],
-
+      license='GPL',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
@@ -37,7 +37,7 @@ setup(name=NAME,
           'lxml>=4.6.3',
           'xmltodict==0.11.0'
       ],
-      scripts=[ 'scripts/createReportekConvertersLink4Zope'],
+      scripts=['scripts/createReportekConvertersLink4Zope'],
       package_data={
           '': ['*.txt', '*.rst'],
           'reportek.converters': ['lib/*'],
