@@ -1,3 +1,8 @@
+1.2.0-dev0 (unreleased)
+-----------------------
+* Bumped lxml
+* Prep egg release
+
 1.1.3 (2018-09-28)
 ------------------
 * Added mmr_p_xls_xml.py script

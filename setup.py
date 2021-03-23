@@ -1,10 +1,21 @@
+from os.path import join
+
 from setuptools import find_packages, setup
 
-setup(name='reportek.converters',
-      version='1.1.3',
-      author='Eau de Web',
-      author_email='office@eaudeweb.ro',
-      url='http://cdr.eionet.europa.eu/',
+NAME = 'reportek.converters'
+PATH = ['Products', NAME, 'version.txt']
+VERSION = open(join(*PATH)).read().strip()
+setup(name=NAME,
+      version=VERSION,
+      description="Reportek converters",
+      long_description_content_type="text/x-rst",
+      long_description=(
+          open("README.rst").read() + "\n" +
+          open("CHANGELOG.rst").read()
+      ),
+      author='European Environment Agency: DIS1 P-Team',
+      author_email='eea-edw-c-team-alerts@googlegroups.com',
+      url='https://github.com/eea/reportek-converters',
 
       setup_requires = [ "setuptools_git >= 1.0", ],
 
@@ -26,7 +37,6 @@ setup(name='reportek.converters',
           'lxml>=4.6.3',
           'xmltodict==0.11.0'
       ],
-      #scripts=[ 'web.py', 'convert.py', 'settings.py', 'utils.py'],
       scripts=[ 'scripts/createReportekConvertersLink4Zope'],
       package_data={
           '': ['*.txt', '*.rst'],
