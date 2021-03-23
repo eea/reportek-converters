@@ -12,13 +12,11 @@ The Reportek converters is an addon Product for local conversions scripts.
 Installation
 ------------
 
-* Add ``reportek.converters`` to the list of eggs to install, e.g.:
+* Add ``reportek.converters`` to the list of eggs to install, e.g.::
 
     [buildout]
-    ...
-    eggs =
-        ...
-        reportek.converters
+    eggs +=
+      eea.facetednavigation
 
 * Re-run buildout, e.g. with:
 
