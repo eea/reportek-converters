@@ -1,5 +1,5 @@
-1.2.0-dev0 (unreleased)
------------------------
+1.2.0 (2021-03-23)
+------------------
 * Bumped lxml
 * Prep egg release
 
