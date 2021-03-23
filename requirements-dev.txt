@@ -1,6 +1,5 @@
 -r requirements.txt
 nose==1.1.2
-pycrypto==2.6.1
 ssh==1.7.14
 supervisor
 gunicorn
