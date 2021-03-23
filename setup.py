@@ -23,7 +23,7 @@ setup(name='reportek.converters',
           'openpyxl==2.5.6',
           'jdcal==1.4',
           'et_xmlfile==1.0.1',
-          'lxml==4.1.1',
+          'lxml>=4.6.2',
           'xmltodict==0.11.0'
       ],
       #scripts=[ 'web.py', 'convert.py', 'settings.py', 'utils.py'],
