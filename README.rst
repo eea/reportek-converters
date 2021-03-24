@@ -16,7 +16,7 @@ Installation
 
     [buildout]
     eggs +=
-      eea.facetednavigation
+      reportek.converters
 
 * Re-run buildout, e.g. with:
 
