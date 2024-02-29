@@ -31,11 +31,11 @@ setup(name=NAME,
           'Jinja2>=2.10',
           'argparse',
           'scrubber>=1.6.1',
-          'openpyxl==2.5.6',
-          'jdcal==1.4',
-          'et_xmlfile==1.0.1',
+          'openpyxl>=2.5.6',
+          'jdcal>=1.4',
+          'et_xmlfile>=1.0.1',
           'lxml>=4.6.3',
-          'xmltodict==0.11.0'
+          'xmltodict>=0.11.0'
       ],
       scripts=['scripts/createReportekConvertersLink4Zope'],
       package_data={
