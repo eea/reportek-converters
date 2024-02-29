@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import flask
-from flask_script import Manager
+# from flask_script import Manager
 import tempfile
 import base64
 import logging
@@ -133,6 +133,6 @@ def convert(name):
 
 
 app = create_app()
-manager = Manager(app)
+# manager = Manager(app)
 if __name__ == "__main__":
-    manager.run()
+    app.run()

@@ -1,5 +1,4 @@
 BeautifulSoup4
-Flask-Script
 Flask
 Jinja2
 Pillow
@@ -12,5 +11,4 @@ lxml
 openpyxl
 path.py
 requests
-scrubber
 xmltodict
