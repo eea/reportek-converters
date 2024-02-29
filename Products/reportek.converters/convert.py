@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import path
 import os
-from path import path
+from path import Path
 import logging
 import sys
 
@@ -19,7 +19,7 @@ class ConversionError(Exception):
 
 
 def init_converters():
-    config_path = path(__file__).parent.abspath() / 'config'
+    config_path = Path(__file__).parent.abspath() / 'config'
     params = json.loads((config_path / 'converters.json').bytes())
     return {args.pop('name'): Converter(**args)
             for args in params}
@@ -38,8 +38,8 @@ def call(converter_id, filename, extra_args=[]):
                            stderr=subprocess.STDOUT,
                            cwd=tmp_dir,
                            env=dict(os.environ,
-                                    SCRIPTS=path(os.getcwd()) / 'bin',
-                                    LIB=path(os.getcwd()) / 'lib',
+                                    SCRIPTS=Path(os.getcwd()) / 'bin',
+                                    LIB=Path(os.getcwd()) / 'lib',
                                     TMPDIR = tmp_dir,
                                     TEMP = tmp_dir,
                                     TMP = tmp_dir,
@@ -62,7 +62,7 @@ def call(converter_id, filename, extra_args=[]):
                 conversion_log.warning(message %(converter_id, exp.output))
             raise cexp
         finally:
-            path(tmp_dir).rmtree()
+            Path(tmp_dir).rmtree()
     else:
         raise NotImplementedError
 
