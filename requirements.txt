@@ -1,4 +1,4 @@
-BeautifulSoup
+BeautifulSoup4
 Flask-Script
 Flask
 Jinja2
