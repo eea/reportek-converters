@@ -68,13 +68,13 @@ def call(converter_id, filename, extra_args=[]):
 
 
 def list_converters():
-    return converters.keys()
+    return list(converters.keys())
 
 
 def list_converters_params():
     results = []
     app = flask.current_app
-    for conv in converters.values():
+    for conv in list(converters.values()):
         name = '{prefix}{name}'.format(prefix=app.config.get('PREFIX', ''),
                                        name=conv.name)
         tag = app.config.get('TAG', '')

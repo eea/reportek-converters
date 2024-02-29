@@ -5,7 +5,7 @@ import sys
 import os
 import web
 from mock import patch
-from StringIO import StringIO
+from io import StringIO
 from web import create_app
 from convert import call
 
@@ -59,8 +59,8 @@ class WebTest(unittest.TestCase):
                  title,
                  'convert/rar2list', #convert_url
                  [
-                     u'application/x-rar-compressed',
-                     u'application/rar'
+                     'application/x-rar-compressed',
+                     'application/rar'
                  ], #ct_input
                  'text/plain;charset=utf-8', #ct_output
                  '', #ct_schema

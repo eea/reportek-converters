@@ -30,7 +30,7 @@ from cachetools import TTLCache, cached
 from lxml import etree
 from openpyxl import load_workbook
 from openpyxl.utils.cell import range_boundaries
-from utils import utOpen
+from .utils import utOpen
 
 cache = TTLCache(maxsize=100, ttl=3600)
 SCHEMA = "http://dd.eionet.europa.eu/schemas/mmr-projections/projections-Article23table1v6.XSD"
@@ -169,8 +169,8 @@ if __name__ == '__main__':
         args = None
 
     if not args or not args.xls:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

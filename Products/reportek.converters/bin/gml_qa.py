@@ -22,15 +22,15 @@ __doc__ = """
 GML QA module
 """
 
-from gml              import GMLStructure
-from gml_geometry     import isPointInsideRectangle
-from gml_generator  import GMLGenerator
-from gml_sd_parser    import gml_sd_import
-from gml_meta_parser  import meta_import
-from gml_prj_parser  import prj_import
-from gml_parser       import gml_import
-from utils            import utOpen, zip_generator
-from constants        import *
+from .gml              import GMLStructure
+from .gml_geometry     import isPointInsideRectangle
+from .gml_generator  import GMLGenerator
+from .gml_sd_parser    import gml_sd_import
+from .gml_meta_parser  import meta_import
+from .gml_prj_parser  import prj_import
+from .gml_parser       import gml_import
+from .utils            import utOpen, zip_generator
+from .constants        import *
 
 import sys, os
 import optparse
@@ -120,8 +120,8 @@ if __name__ == '__main__':
     except: options = None
 
     if not options or not options.gml:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

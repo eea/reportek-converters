@@ -26,9 +26,9 @@ __doc__ = """
 
 from xml.sax.handler import ContentHandler
 from xml.sax         import *
-from cStringIO       import StringIO
+from io       import StringIO
 from types           import StringType
-from constants       import *
+from .constants       import *
 
 def meta_import(file):
     """ """
@@ -61,10 +61,10 @@ class meta_handler(ContentHandler):
     def endElement(self, name):
 
         if name in METADATA_LABELS:
-            self.__retMetaDict[(u''.join(name).strip())] = u''.join(self.__data).strip()
+            self.__retMetaDict[(''.join(name).strip())] = ''.join(self.__data).strip()
 
         if name in PROJECTION_LABELS:
-            self.__retMetaDict[(u''.join(name).strip())] = u''.join(self.__data).strip()
+            self.__retMetaDict[(''.join(name).strip())] = ''.join(self.__data).strip()
 
 
         self.__data = []

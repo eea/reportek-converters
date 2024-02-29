@@ -9,7 +9,7 @@ import os
 from tempfile import NamedTemporaryFile
 from path import path
 
-import constants
+from . import constants
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

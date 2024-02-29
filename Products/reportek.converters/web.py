@@ -65,8 +65,8 @@ def convert(name):
     start = time.time()
     document = getattr(flask.request.files.get('file', ''), 'stream', None)
     if not document:
-        import StringIO
-        document = StringIO.StringIO(flask.request.data)
+        import io
+        document = io.StringIO(flask.request.data)
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         chunk = True
         while chunk:
@@ -75,9 +75,9 @@ def convert(name):
         tmp.file.flush()
         tmp.file.seek(0)
         file_size = os.path.getsize(tmp.name)
-        extra_params = flask.request.form.values()
+        extra_params = list(flask.request.form.values())
         if not extra_params:
-            extra_params = flask.request.args.values()
+            extra_params = list(flask.request.args.values())
         needs_additional_files = getattr(converters.get(name), 'additional_files', False)
         try:
             if needs_additional_files:

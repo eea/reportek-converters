@@ -22,21 +22,21 @@ __doc__ = """
     GML to image converter
 """
 import string
-import StringIO
+import io
 import sys
 import os
-import httplib
+import http.client
 
-from gml_parser     import gml_import
-from gml            import GMLStructure
-from ims_parser     import ims_response_import
-from ims_object     import IMSObject
+from .gml_parser     import gml_import
+from .gml            import GMLStructure
+from .ims_parser     import ims_response_import
+from .ims_object     import IMSObject
 
-from constants      import *
-from gml_geometry   import *
-from utils          import utOpen
+from .constants      import *
+from .gml_geometry   import *
+from .utils          import utOpen
 from os.path        import join
-from urllib         import FancyURLopener
+from urllib.request         import FancyURLopener
 from os             import unlink
 from PIL            import Image, ImageDraw, ImageFont, ImagePalette
 
@@ -114,17 +114,17 @@ def gml_to_image(in_name, in_gml, in_width, in_height, in_filetype, in_out_colou
             for p in range(len(mypoint)):
                 p_count = 0
                 for k in range (len(conv_gml.getShp_records()[m])):
-                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k <>p:
+                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k !=p:
                         p_count += 1
                 poi_has_pol[p] = p_count
             for k in range (len(conv_gml.getShp_records()[m])):
                 p_count = 0
                 for p in range(len(mypoint)):
-                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k <>p:
+                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k !=p:
                         p_count+=1
                 pol_has_poi[k] = p_count
             pol_sort = {}
-            auxlist = [ (value, key) for key, value in pol_has_poi.items() ]
+            auxlist = [ (value, key) for key, value in list(pol_has_poi.items()) ]
             auxlist.sort()
             auxlist.reverse()
             i = 0
@@ -249,17 +249,17 @@ def flash_ext_print(in_name, in_gml, in_width, in_height, in_filetype, in_out_co
             for p in range(len(mypoint)):
                 p_count = 0
                 for k in range (len(conv_gml.getShp_records()[m])):
-                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k <>p:
+                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k !=p:
                         p_count += 1
                 poi_has_pol[p] = p_count
             for k in range (len(conv_gml.getShp_records()[m])):
                 p_count = 0
                 for p in range(len(mypoint)):
-                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k <>p:
+                    if point_inside_polygon(mypoint[p][0],mypoint[p][1],(conv_gml.getShp_records()[m])[k]) and k !=p:
                         p_count+=1
                 pol_has_poi[k] = p_count
             pol_sort = {}
-            auxlist = [ (value, key) for key, value in pol_has_poi.items() ]
+            auxlist = [ (value, key) for key, value in list(pol_has_poi.items()) ]
             auxlist.sort()
             auxlist.reverse()
             i = 0
@@ -338,7 +338,7 @@ def get_background_image(ims_server, ims_service, minx, miny, maxx, maxy, width,
     SoapMessage = SM_TEMPLATE % (minx, miny, maxx, maxy, width, height)
 
     # construct and send the header
-    webservice = httplib.HTTP(ims_server)
+    webservice = http.client.HTTP(ims_server)
     webservice.putrequest("POST", "/servlet/com.esri.esrimap.Esrimap?ServiceName=%s" % ims_service)
     webservice.putheader("Host", ims_server)
     webservice.putheader("User-Agent", "Python post")

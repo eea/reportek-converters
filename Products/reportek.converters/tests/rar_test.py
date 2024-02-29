@@ -16,5 +16,5 @@ class RarConverterTest(unittest.TestCase):
     def test_rar2list_with_unicode_characters_returns_contents(self):
         from convert import call
         result = call('rar2list', str(rar_data / 'diacritics.rar'))
-        self.assertIn(u"director cu spații și diacritice".encode('utf-8'),
+        self.assertIn("director cu spații și diacritice".encode('utf-8'),
                       result)

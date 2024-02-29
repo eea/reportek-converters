@@ -76,15 +76,15 @@ class ConvertTest(unittest.TestCase):
         import flask
         from path import path
         from convert import init_converters
-        import StringIO
+        import io
 
         converters = init_converters()
         mock_converters.get = Mock(return_value=converters['mock_converter'])
 
         files = {
-            'file': (StringIO.StringIO('shp data'), 'file.shp'),
-            'shx': (StringIO.StringIO('shx data'), 'file.shx'),
-            'dbf': (StringIO.StringIO('dbf data'), 'file.dbf')
+            'file': (io.StringIO('shp data'), 'file.shp'),
+            'shx': (io.StringIO('shx data'), 'file.shx'),
+            'dbf': (io.StringIO('dbf data'), 'file.dbf')
         }
         resp = self.client.post("/convert/mock_converter", data=files)
         self.assertEqual(2, len(mock_call.mock_calls[0][1][2]))

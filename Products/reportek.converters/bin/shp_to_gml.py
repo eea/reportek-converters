@@ -25,11 +25,11 @@ __doc__ = """
 import shapelib
 import dbflib
 
-from gml_generator  import GMLGenerator
-from gml_sd_parser  import gml_sd_import
-from gml_meta_parser  import meta_import
-from utils          import utOpen
-from constants      import *
+from .gml_generator  import GMLGenerator
+from .gml_sd_parser  import gml_sd_import
+from .gml_meta_parser  import meta_import
+from .utils          import utOpen
+from .constants      import *
 
 import sys, os
 import optparse
@@ -95,7 +95,7 @@ def shp_to_gml(filename, in_schema, user_enc="utf-8", temp_name=None):
     gml_data += gml_generator.fillBoundingBox(shp.info()[2][0], shp.info()[2][1], shp.info()[3][0], shp.info()[3][1])
     for j in range(dbf.record_count()):
         dbf_ready = {}
-        for k,v in ((dbf.read_record(j)).items()):
+        for k,v in (list((dbf.read_record(j)).items())):
             if k in dbf_filter:
                 if dbf_filter[k]['type'] == 'string':
                     if len(v) is not 0:
@@ -151,7 +151,7 @@ if __name__ == '__main__':
     except: options = None
 
     if not options or not options.filename:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         sys.stdout.write(shp_to_gml(filename=options.filename, in_schema=options.schema))

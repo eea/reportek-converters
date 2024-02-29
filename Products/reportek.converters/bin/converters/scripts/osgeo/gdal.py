@@ -31,7 +31,7 @@ def _swig_getattr(self,class_type,name):
     if (name == "thisown"): return self.this.own()
     method = class_type.__swig_getmethods__.get(name,None)
     if method: return method(self)
-    raise AttributeError,name
+    raise AttributeError(name)
 
 def _swig_repr(self):
     try: strthis = "proxy of " + self.this.__repr__()
@@ -40,7 +40,7 @@ def _swig_repr(self):
 
 import types
 try:
-    _object = types.ObjectType
+    _object = object
     _newclass = 1
 except AttributeError:
     class _object : pass
@@ -48,8 +48,8 @@ except AttributeError:
 del types
 
 
-from gdalconst import *
-import gdalconst
+from .gdalconst import *
+from . import gdalconst
 
 
 import sys
@@ -90,7 +90,7 @@ def RGBFile2PCTFile( src_filename, dst_filename ):
                              src_ds.GetRasterBand(2),
                              src_ds.GetRasterBand(3),
                              256, ct )
-  if err <> 0:
+  if err != 0:
       return err
 
   gtiff_driver = GetDriverByName('GTiff')
@@ -193,7 +193,7 @@ class MajorObject(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, MajorObject, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, MajorObject, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     def GetDescription(*args):
         """GetDescription(self) -> char"""
@@ -249,7 +249,7 @@ class Driver(MajorObject):
     __swig_getmethods__ = {}
     for _s in [MajorObject]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
     __getattr__ = lambda self, name: _swig_getattr(self, Driver, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     __swig_getmethods__["ShortName"] = _gdal.Driver_ShortName_get
     if _newclass:ShortName = _swig_property(_gdal.Driver_ShortName_get)
@@ -505,7 +505,7 @@ class Dataset(MajorObject):
     __swig_getmethods__ = {}
     for _s in [MajorObject]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
     __getattr__ = lambda self, name: _swig_getattr(self, Dataset, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     __swig_getmethods__["RasterXSize"] = _gdal.Dataset_RasterXSize_get
     if _newclass:RasterXSize = _swig_property(_gdal.Dataset_RasterXSize_get)
@@ -599,7 +599,7 @@ class Dataset(MajorObject):
         return _gdal.Dataset_ReadRaster(*args, **kwargs)
 
     def ReadAsArray(self, xoff=0, yoff=0, xsize=None, ysize=None ):
-        import gdalnumeric
+        from . import gdalnumeric
         return gdalnumeric.DatasetReadAsArray( self, xoff, yoff, xsize, ysize )
     def WriteRaster(self, xoff, yoff, xsize, ysize,
                     buf_string,
@@ -611,13 +611,13 @@ class Dataset(MajorObject):
         if buf_ysize is None:
             buf_ysize = ysize;
         if band_list is None:
-            band_list = range(1,self.RasterCount+1)
+            band_list = list(range(1,self.RasterCount+1))
         if buf_type is None:
             buf_type = self.GetRasterBand(1).DataType
 
         if len(buf_string) < buf_xsize * buf_ysize * len(band_list) \
            * (_gdal.GetDataTypeSize(buf_type) / 8):
-            raise ValueError, "raster buffer too small in WriteRaster"
+            raise ValueError("raster buffer too small in WriteRaster")
         else:    
             return _gdal.Dataset_WriteRaster(self,
                  xoff, yoff, xsize, ysize,
@@ -628,7 +628,7 @@ class Dataset(MajorObject):
                    band_list = None ):
 
         if band_list is None:
-            band_list = range(1,self.RasterCount+1)
+            band_list = list(range(1,self.RasterCount+1))
         if buf_xsize is None:
             buf_xsize = xsize;
         if buf_ysize is None:
@@ -648,7 +648,7 @@ class Dataset(MajorObject):
             return sd_list
 
         i = 1
-        while sd.has_key('SUBDATASET_'+str(i)+'_NAME'):
+        while 'SUBDATASET_'+str(i)+'_NAME' in sd:
             sd_list.append( ( sd['SUBDATASET_'+str(i)+'_NAME'],
                               sd['SUBDATASET_'+str(i)+'_DESC'] ) )
             i = i + 1
@@ -665,7 +665,7 @@ class Band(MajorObject):
     __swig_getmethods__ = {}
     for _s in [MajorObject]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
     __getattr__ = lambda self, name: _swig_getattr(self, Band, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     __swig_getmethods__["XSize"] = _gdal.Band_XSize_get
     if _newclass:XSize = _swig_property(_gdal.Band_XSize_get)
@@ -828,14 +828,14 @@ class Band(MajorObject):
 
     def ReadAsArray(self, xoff=0, yoff=0, win_xsize=None, win_ysize=None,
                     buf_xsize=None, buf_ysize=None, buf_obj=None):
-        import gdalnumeric
+        from . import gdalnumeric
 
         return gdalnumeric.BandReadAsArray( self, xoff, yoff,
                                             win_xsize, win_ysize,
                                             buf_xsize, buf_ysize, buf_obj )
       
     def WriteArray(self, array, xoff=0, yoff=0):
-        import gdalnumeric
+        from . import gdalnumeric
 
         return gdalnumeric.BandWriteArray( self, array, xoff, yoff )
 

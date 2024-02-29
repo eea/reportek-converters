@@ -23,11 +23,11 @@ __doc__ = """
 """
 
 
-from kml_generator  import KMLGenerator
-from gml            import GMLStructure
-from gml_parser     import gml_import
-from utils          import utOpen, transcalc
-from constants      import *
+from .kml_generator  import KMLGenerator
+from .gml            import GMLStructure
+from .gml_parser     import gml_import
+from .utils          import utOpen, transcalc
+from .constants      import *
 
 from string         import strip
 
@@ -101,8 +101,8 @@ if __name__ == '__main__':
     except: options = None
 
     if not options or not options.gml:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

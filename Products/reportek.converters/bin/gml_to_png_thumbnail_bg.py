@@ -22,9 +22,9 @@ __doc__ = """
 GML to PNG_thumbnail with background converter module.
 """
 
-from gml_image      import gml_to_image
-from utils          import utOpen, zip_generator
-from constants      import *
+from .gml_image      import gml_to_image
+from .utils          import utOpen, zip_generator
+from .constants      import *
 
 import sys, os
 import optparse
@@ -62,8 +62,8 @@ if __name__ == '__main__':
     except: options = None
 
     if not options or not options.gml:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

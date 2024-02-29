@@ -24,10 +24,10 @@ __doc__ = """
     GML schema definition parser module.
 """
 
-from gml                import GMLStructure
+from .gml                import GMLStructure
 from xml.sax.handler    import ContentHandler
 from xml.sax            import *
-from cStringIO          import StringIO
+from io          import StringIO
 from types              import StringType
 
 _DATA_TAGS = ['xs:element']
@@ -43,7 +43,7 @@ def gml_sd_import(file):
     try:
         gml_obj = chandler.getGmlSdVal()
     except Exception:
-        raise Exception, 'GML schema is not valid'
+        raise Exception('GML schema is not valid')
 
     #gml_obj = chandler.getGmlSdVal()
 
@@ -70,11 +70,11 @@ class gml_sd_handler(ContentHandler):
 
     def startElement(self, name, attrs):
         if name == 'xs:element':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'name':
                     self.gml_sd_val.setRec_name(attrs['name']) 
         if name == 'xs:restriction':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'base':
                     #clean 'xs:'
                     type_tmp = attrs['base']
@@ -82,21 +82,21 @@ class gml_sd_handler(ContentHandler):
                     self.gml_sd_val.setRec_type(type_tmp)
 
         if name == 'xs:maxLength':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'value':
                     self.gml_sd_val.setRec_leng(attrs['value']) 
                     if self.gml_sd_val.getRec_type() == 'string':
                         self.__tagout = 1
 
         if name == 'xs:totalDigits':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'value':
                     self.gml_sd_val.setRec_leng(attrs['value'])
                     if self.gml_sd_val.getRec_type() == 'integer':
                         self.__tagout = 1
 
         if name == 'xs:fractionDigits':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'value':
                     self.gml_sd_val.setRec_decc(attrs['value'])
                     self.__tagout = 1

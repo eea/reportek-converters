@@ -66,8 +66,8 @@ if __name__ == '__main__':
         args = None
 
     if not args or not args.xml:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

@@ -28,9 +28,9 @@ import tempfile
 import time
 from zipfile import *
 from os.path import join
-from urllib import FancyURLopener
+from urllib.request import FancyURLopener
 
-from constants import *
+from .constants import *
 
 def utOpen(file):
     # Open file
@@ -46,9 +46,9 @@ def utGMLEncode(p_str, p_str_enc):
     # If no encoding is provided it will assume as input encoding UTF-8 
     # Also special characters that might appear in GML files are escaped
     if p_str_enc == '':
-        l_tmp = unicode(str(p_str), errors='replace')
+        l_tmp = str(str(p_str), errors='replace')
     else:
-         l_tmp = unicode(str(p_str),'%s' % p_str_enc, errors='replace')
+         l_tmp = str(str(p_str),'%s' % p_str_enc, errors='replace')
     l_tmp = l_tmp.encode('utf8', 'replace')
     #XML entities
     l_tmp = l_tmp.replace('&', '&amp;')

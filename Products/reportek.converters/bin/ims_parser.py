@@ -24,10 +24,10 @@ __doc__ = """
 
 from xml.sax.handler import ContentHandler
 from xml.sax         import *
-from cStringIO       import StringIO
+from io       import StringIO
 from types           import StringType
 
-from ims_object      import IMSObject
+from .ims_object      import IMSObject
 
 _DATA_TAGS = ['ERROR']
 
@@ -59,7 +59,7 @@ class ims_res_handler(ContentHandler):
 
     def startElement(self, name, attrs):
         if name == 'ENVELOPE':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'minx':
                     self.ims_res_val.setMinx(attrs['minx'])
                 if elem == 'miny':
@@ -69,7 +69,7 @@ class ims_res_handler(ContentHandler):
                 if elem == 'maxy':
                     self.ims_res_val.setMaxy(attrs['maxy'])
         if name == 'OUTPUT':
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'url':
                     self.ims_res_val.setUrl(attrs['url'])
 
@@ -78,8 +78,8 @@ class ims_res_handler(ContentHandler):
     def endElement(self, name):
         self.__currentTag = ''
         if name in _DATA_TAGS:
-            self.ims_res_val.setIms_error(u''.join(self.__data).strip())
-            print self.ims_res_val.getIms_error()
+            self.ims_res_val.setIms_error(''.join(self.__data).strip())
+            print(self.ims_res_val.getIms_error())
             
     def characters(self, content):
         currentTag = self.__currentTag

@@ -25,14 +25,14 @@ __doc__ = """
 import shapelib
 import dbflib
 
-from gml              import GMLStructure
-from gml_generator  import GMLGenerator
-from gml_sd_parser    import gml_sd_import
-from gml_meta_parser  import meta_import
-from gml_prj_parser  import prj_import
-from gml_parser       import gml_import
-from utils            import utOpen, zip_generator
-from constants        import *
+from .gml              import GMLStructure
+from .gml_generator  import GMLGenerator
+from .gml_sd_parser    import gml_sd_import
+from .gml_meta_parser  import meta_import
+from .gml_prj_parser  import prj_import
+from .gml_parser       import gml_import
+from .utils            import utOpen, zip_generator
+from .constants        import *
 
 import sys, os
 import optparse
@@ -71,7 +71,7 @@ def gml_to_shp(gml_file, schema_file, user_enc="utf-8"):
     #fill schema(dbf) information
     try:
         conv_gml = gml_sd_import(input_schema.read())
-    except Exception, strerror:
+    except Exception as strerror:
         return "", strerror
 
     conv_gml.setGeo_name(name)
@@ -183,8 +183,8 @@ def gml_to_shp(gml_file, schema_file, user_enc="utf-8"):
     for k in EXTENSIONS:
         try:
             os.unlink(os.path.join(FILES_PATH, '%s%s' % (name, k)))
-        except Exception, msg:
-            print msg
+        except Exception as msg:
+            print(msg)
 
     return res
 
@@ -199,8 +199,8 @@ if __name__ == '__main__':
     except: options = ""
 
     if not options or not options.gml:
-        print __doc__
-        print "For help use --help"
+        print(__doc__)
+        print("For help use --help")
     else:
         if sys.platform == "win32":
             msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)

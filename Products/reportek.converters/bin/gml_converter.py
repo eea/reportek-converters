@@ -25,22 +25,22 @@ __doc__ = """
 import shapelib
 import dbflib
 import shptree
-import StringIO
+import io
 import sys
 import PIL.Image
 import PIL.ImageDraw
 from os.path        import join
-from urllib         import FancyURLopener
+from urllib.request         import FancyURLopener
 from os             import unlink, getenv
 
-from gml_generator   import GMLGenerator
-from gml_parser      import gml_import
-from gml_sd_parser    import gml_sd_import
-from gml            import GMLStructure
-from utils import utOpen, zip_generator
-from gml_image import gmlToSimpleImage
-from gml_image import gmlToBgImage
-import gml_geometry
+from .gml_generator   import GMLGenerator
+from .gml_parser      import gml_import
+from .gml_sd_parser    import gml_sd_import
+from .gml            import GMLStructure
+from .utils import utOpen, zip_generator
+from .gml_image import gmlToSimpleImage
+from .gml_image import gmlToBgImage
+from . import gml_geometry
 
 EXTENSIONS = ['.dbf', '.shp', '.shx']
 FILES_PATH = getenv('TEMP')

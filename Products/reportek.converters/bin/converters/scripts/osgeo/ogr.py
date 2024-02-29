@@ -31,7 +31,7 @@ def _swig_getattr(self,class_type,name):
     if (name == "thisown"): return self.this.own()
     method = class_type.__swig_getmethods__.get(name,None)
     if method: return method(self)
-    raise AttributeError,name
+    raise AttributeError(name)
 
 def _swig_repr(self):
     try: strthis = "proxy of " + self.this.__repr__()
@@ -40,7 +40,7 @@ def _swig_repr(self):
 
 import types
 try:
-    _object = types.ObjectType
+    _object = object
     _newclass = 1
 except AttributeError:
     class _object : pass
@@ -105,14 +105,14 @@ def UseExceptions(*args):
 def DontUseExceptions(*args):
   """DontUseExceptions()"""
   return _ogr.DontUseExceptions(*args)
-import osr
+from . import osr
 class Driver(_object):
     """Proxy of C++ Driver class"""
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Driver, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, Driver, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     __swig_getmethods__["name"] = _ogr.Driver_name_get
     if _newclass:name = _swig_property(_ogr.Driver_name_get)
@@ -263,7 +263,7 @@ class DataSource(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, DataSource, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, DataSource, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     __swig_getmethods__["name"] = _ogr.DataSource_name_get
     if _newclass:name = _swig_property(_ogr.DataSource_name_get)
@@ -562,46 +562,46 @@ class DataSource(_object):
     aname'] would return the layer named "aname".
     :4] would return a list of the first four layers."""
         import types
-        if isinstance(value, types.SliceType):
+        if isinstance(value, slice):
             output = []
-            for i in xrange(value.start,value.stop,value.step):
+            for i in range(value.start,value.stop,value.step):
                 try:
                     output.append(self.GetLayer(i))
                 except OGRError: #we're done because we're off the end
                     return output
             return output
-        if isinstance(value, types.IntType):
+        if isinstance(value, int):
             if value > len(self)-1:
                 raise IndexError
             return self.GetLayer(value)
-        elif isinstance(value,types.StringType):
+        elif isinstance(value,bytes):
             return self.GetLayer(value)
         else:
-            raise TypeError, 'Input %s is not of String or Int type' % type(value)
+            raise TypeError('Input %s is not of String or Int type' % type(value))
 
     def GetLayer(self,iLayer=0):
         """Return the layer given an index or a name"""
         import types
-        if isinstance(iLayer, types.StringTypes):
+        if isinstance(iLayer, (str,)):
             return self.GetLayerByName(str(iLayer))
-        elif isinstance(iLayer, types.IntType):
+        elif isinstance(iLayer, int):
             return self.GetLayerByIndex(iLayer)
         else:
-            raise TypeError, "Input %s is not of String or Int type" % type(iLayer)
+            raise TypeError("Input %s is not of String or Int type" % type(iLayer))
 
     def DeleteLayer(self, value):
         """Deletes the layer given an index or layer name"""
         import types
-        if isinstance(value, types.StringTypes):
+        if isinstance(value, (str,)):
             for i in range(self.GetLayerCount()):
                 name = self.GetLayer(i).GetName()
                 if name == value:
                     return _ogr.DataSource_DeleteLayer(self, i)
-            raise ValueError, "Layer %s not found to delete" % value
-        elif isinstance(value, types.IntType):
+            raise ValueError("Layer %s not found to delete" % value)
+        elif isinstance(value, int):
             return _ogr.DataSource_DeleteLayer(self, value)
         else:
-            raise TypeError, "Input %s is not of String or Int type" % type(iLayer)
+            raise TypeError("Input %s is not of String or Int type" % type(iLayer))
 
 DataSource_swigregister = _ogr.DataSource_swigregister
 DataSource_swigregister(DataSource)
@@ -612,7 +612,7 @@ class Layer(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, Layer, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, Layer, name)
-    def __init__(self): raise AttributeError, "No constructor defined"
+    def __init__(self): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     def GetRefCount(*args):
         """
@@ -1226,28 +1226,28 @@ class Layer(_object):
     r[0] would return the first feature on the layer.
     r[0:4] would return a list of the first four features."""
         import types
-        if isinstance(value, types.SliceType):
+        if isinstance(value, slice):
             output = []
-            if value.stop == sys.maxint:
+            if value.stop == sys.maxsize:
                 
                 
                 
                 stop = len(self) - 1
             else:
                 stop = value.stop
-            for i in xrange(value.start,stop,value.step):
+            for i in range(value.start,stop,value.step):
                 feature = self.GetFeature(i)
                 if feature:
                     output.append(feature)
                 else:
                     return output
             return output
-        if isinstance(value, types.IntType):
+        if isinstance(value, int):
             if value > len(self)-1:
                 raise IndexError
             return self.GetFeature(value)
         else:
-            raise TypeError,"Input %s is not of IntType or SliceType" % type(value)
+            raise TypeError("Input %s is not of IntType or SliceType" % type(value))
 
     def CreateFields(fields):
         """Create a list of fields on the Layer"""
@@ -1257,7 +1257,7 @@ class Layer(_object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         feature = self.GetNextFeature()
         if not feature:
             raise StopIteration
@@ -2049,14 +2049,14 @@ class Feature(_object):
         try:
             return self.GetField(name)
         except:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     def GetField(self, fld_index):
         import types
-        if isinstance(fld_index, types.StringType):
+        if isinstance(fld_index, bytes):
             fld_index = self.GetFieldIndex(fld_index)
         if (fld_index < 0) or (fld_index > self.GetFieldCount()):
-            raise ValueError, "Illegal field requested in GetField()"
+            raise ValueError("Illegal field requested in GetField()")
         if not (self.IsFieldSet(fld_index)):
             return None
         fld_type = self.GetFieldType(fld_index)
@@ -2077,7 +2077,7 @@ class Feature(_object):
         return names
 
     def items(self):
-        keys = self.keys()
+        keys = list(self.keys())
         output = {}
         for key in keys:
             output[key] = self.GetField(key)
@@ -2098,13 +2098,13 @@ class Feature(_object):
         if fid:
             output['id'] = fid
             
-        for key in self.keys():
+        for key in list(self.keys()):
             output['properties'][key] = self.GetField(key)
         
         if not as_object:
             try:
                 import simplejson
-            except ImportError, error:
+            except ImportError as error:
                 raise ImportError("Unable to import simplejson, needed for ExportToJson. (%s)" % error)
             output = simplejson.dumps(output)
         

@@ -22,7 +22,7 @@ __doc__ = """
       Reproduces a GML object structure and defines getters/setters for the elements
 """
 
-from utils import utf8Encode
+from .utils import utf8Encode
 
 class GMLStructure:
     """ Reproduces a GML object structure and defines getters/setters for the elements """

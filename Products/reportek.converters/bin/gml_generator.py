@@ -22,9 +22,9 @@ __doc__ = """
 Tempaltes for GML generation
 """
 
-from utils  import utGMLEncode
+from .utils  import utGMLEncode
 from string import strip
-from constants       import *
+from .constants       import *
 
 class GMLGenerator:
 
@@ -142,7 +142,7 @@ class GMLGenerator:
         fmp_a('<gml:coordinates>%s,%s</gml:coordinates>' % (X,Y))
         fmp_a('</gml:Point>')
         fmp_a('</geometryProperty>')
-        for k,v in (dbfValues.items()):
+        for k,v in (list(dbfValues.items())):
             fmp_a('<%s>%s</%s>' % (utGMLEncode(k, self.__user_enc), utGMLEncode(v, self.__user_enc), utGMLEncode(k, self.__user_enc)))
         fmp_a('</reportnet>')
         fmp_a('</gml:featureMember>')
@@ -175,7 +175,7 @@ class GMLGenerator:
                 fml_a('</gml:lineStringMember>')
             fml_a('</gml:MultiLineString>')
         fml_a('</geometryProperty>')
-        for k,v in (dbfValues.items()):
+        for k,v in (list(dbfValues.items())):
             fml_a('<%s>%s</%s>' % (utGMLEncode(k, self.__user_enc), utGMLEncode(v, self.__user_enc), utGMLEncode(k, self.__user_enc)))
         fml_a('</reportnet>')
         fml_a('</gml:featureMember>')
@@ -215,7 +215,7 @@ class GMLGenerator:
                 fmpl_a('</gml:polygonMember>')                    
             fmpl_a('</gml:MultiPolygon>')                
         fmpl_a('</geometryProperty>')
-        for k,v in (dbfValues.items()):
+        for k,v in (list(dbfValues.items())):
             fmpl_a('<%s>%s</%s>' % (utGMLEncode(k, self.__user_enc), utGMLEncode(v, self.__user_enc), utGMLEncode(k, self.__user_enc)))
         fmpl_a('</reportnet>')
         fmpl_a('</gml:featureMember>')

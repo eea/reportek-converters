@@ -10,7 +10,7 @@ def _mime_types():
 def _extensions():
     mime_types = _load_json("mime_types.json")
     extensions = dict()
-    for ext, mimes in mime_types.iteritems():
+    for ext, mimes in mime_types.items():
         for mime in mimes:
             extensions.update({mime: ext})
     return extensions

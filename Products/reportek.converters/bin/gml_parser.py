@@ -25,7 +25,7 @@ __doc__ = """
 
 from xml.sax.handler import ContentHandler
 from xml.sax         import *
-from cStringIO       import StringIO
+from io       import StringIO
 from types           import StringType
 
 _DATA_TAGS = ['gml:X', 'gml:Y', 'gml:coordinates']
@@ -82,7 +82,7 @@ class gml_handler(ContentHandler):
 
     def startElement(self, name, attrs):
         if name == _DATA_ID:
-            for elem in attrs.keys():
+            for elem in list(attrs.keys()):
                 if elem == 'fid':
                     self.struct_gml.setFid(attrs['fid'])
 
@@ -98,23 +98,23 @@ class gml_handler(ContentHandler):
         #START bounding box
         if name == 'gml:X':
             if self.l_coord_marker:
-                self.x_max = u''.join(self.__data).strip()
+                self.x_max = ''.join(self.__data).strip()
             else:
-                self.x_min = u''.join(self.__data).strip()
+                self.x_min = ''.join(self.__data).strip()
             self.__data = []
                 
         if name == 'gml:Y':
             if self.l_coord_marker:
-                self.y_max = u''.join(self.__data).strip()
+                self.y_max = ''.join(self.__data).strip()
             else:
-                self.y_min = u''.join(self.__data).strip()
+                self.y_min = ''.join(self.__data).strip()
             self.__data = []
         #END bounding box  
         
         #START geometry
         if name == 'gml:coordinates':
             tup_final = []
-            listver = (u''.join(self.__data).strip()).split(' ')
+            listver = (''.join(self.__data).strip()).split(' ')
             for ver in listver:
                 tup = ver.split(',')
                 tupa = tup[0]
@@ -152,7 +152,7 @@ class gml_handler(ContentHandler):
         #Start DBF data tags    
         if name in _DATA_SD_TAGS:
             self.struct_gml.setDat_tag_name(name)
-            self.struct_gml.setDat_tag_value(u''.join(self.__data_sd).strip())
+            self.struct_gml.setDat_tag_value(''.join(self.__data_sd).strip())
             #fill list
             self.struct_gml.setDat_field()
             #clean

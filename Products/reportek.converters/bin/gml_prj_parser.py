@@ -26,9 +26,9 @@ __doc__ = """
 
 from xml.sax.handler import ContentHandler
 from xml.sax         import *
-from cStringIO       import StringIO
+from io       import StringIO
 from types           import StringType
-from constants       import *
+from .constants       import *
 
 def prj_import(file):
     """ """
@@ -58,7 +58,7 @@ class prj_handler(ContentHandler):
     def endElement(self, name):
 
         if name in PROJECTION_LABELS:
-            self.__retPrj = u''.join(self.__data).strip()
+            self.__retPrj = ''.join(self.__data).strip()
 
 
         self.__data = []

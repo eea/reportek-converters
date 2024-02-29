@@ -23,7 +23,7 @@ __doc__ = """
       Reproduces an ARCIMS XML response object structure and defines getters/setters for the elements
 """
 
-from utils import utf8Encode
+from .utils import utf8Encode
 
 class IMSObject:
     """ Reproduces an ARCIMS XML object structure and defines getters/setters for the elements """
