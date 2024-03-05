@@ -21,7 +21,7 @@ class ConversionError(Exception):
 def init_converters():
     config_path = Path(__file__).parent.abspath() / 'config'
     params = json.loads((config_path / 'converters.json').bytes())
-    return {args.pop('name'): Converter(**args)
+    return {args.get('name'): Converter(**args)
             for args in params}
 
 
