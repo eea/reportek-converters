@@ -11,6 +11,20 @@
         "returned_content_type": "text/plain;charset=utf-8"
     },
     {
+        "name": "msword2text",
+        "command": "wvWare --dir=tmp --config=wvText.xml {0}",
+        "accepted_content_types": ["application/msword"],
+        "title": "Show as simple text",
+        "returned_content_type": "text/plain;charset=utf-8"
+    },
+    {
+        "name": "msword2html",
+        "command": "wvWare --dir=tmp --config=wvHtml.xml {0}",
+        "accepted_content_types": ["application/msword"],
+        "title": "Show MS-Word as HTML",
+        "returned_content_type": "text/html;charset=utf-8"
+    },
+    {
         "name": "pdftohtml",
         "command": "pdftohtml -noframes -stdout -i -q -enc UTF-8  {0}",
         "accepted_content_types": ["application/pdf"],
