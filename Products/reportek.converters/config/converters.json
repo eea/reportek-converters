@@ -56,14 +56,6 @@
         "returned_content_type": "image/png"
     },
     {
-        "name": "gmltoflash",
-        "command": "flash_document",
-        "accepted_content_types": ["text/xml"],
-        "title": "Display map in GIS viewer (Macromedia Flash)",
-        "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
-        "returned_content_type": "flash"
-    },
-    {
         "name": "gmltoshp",
         "command": "python $SCRIPTS/gml_to_shp.py --gml {0} --schema {1}",
         "accepted_content_types": ["text/xml"],
