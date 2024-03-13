@@ -21,7 +21,7 @@ class ReportekFeedbackScrubber(Scrubber):
                 toremove.append((False, node))
                 continue
 
-            if isinstance(node, basestring):
+            if isinstance(node, str):
                 continue
 
             # Remove disallowed tags

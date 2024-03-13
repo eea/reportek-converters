@@ -38,10 +38,10 @@ if __name__ == "__main__":
                 tmp = []
                 for attr in attrs:
                     try:
-                        value = unicode(record[attr])
+                        value = str(record[attr])
                     except UnicodeDecodeError as err:
                         table._meta.decoder = encodings.codecs.latin_1_decode
-                        value = unicode(record[attr])
+                        value = str(record[attr])
                     except ValueError as err:
                         pass
                     tmp.append(value.strip())
