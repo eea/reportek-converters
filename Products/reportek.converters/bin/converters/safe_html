@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 import argparse
 import sys
+
+from bs4 import BeautifulSoup as bs
+from bs4 import Comment
 from scrubber import Scrubber
-from BeautifulSoup import BeautifulSoup as bs, Comment
+
 
 class ReportekFeedbackScrubber(Scrubber):
     # we might need all i18n and tal/metal attributes added here...
-    allowed_attributes = Scrubber.allowed_attributes | set(('i18n:translate',))
+    allowed_attributes = Scrubber.allowed_attributes | set(("i18n:translate",))
     ignore_empty_attr = False
 
     def strip_disallowed(self, soup):
@@ -23,7 +26,9 @@ class ReportekFeedbackScrubber(Scrubber):
 
             # Remove disallowed tags
             if node.name not in self.allowed_tags:
-                toremove.append((node.name in self.disallowed_tags_save_content, node))
+                toremove.append(
+                    (node.name in self.disallowed_tags_save_content, node)
+                )
                 continue
 
             # Remove disallowed attributes
@@ -37,26 +42,29 @@ class ReportekFeedbackScrubber(Scrubber):
 
                 # TODO: This probably needs to be more robust
                 v2 = v.lower()
-                if any(x in v2 for x in ('javascript:', 'vbscript:', 'expression(')):
+                if any(
+                    x in v2
+                    for x in ("javascript:", "vbscript:", "expression(")
+                ):
                     continue
 
-                attrs.append((k,v))
+                attrs.append((k, v))
             node.attrs = attrs
 
         self._remove_nodes(toremove)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-                description='HTML sanitizer using Scrubber')
+        description="HTML sanitizer using Scrubber"
+    )
     parser.add_argument(
-        'src_file',
-        metavar='src-file',
-        help='path to html file')
+        "src_file", metavar="src-file", help="path to html file"
+    )
     params = parser.parse_args()
-    with open(params.src_file, 'rb') as src_file:
+    with open(params.src_file, "rb") as src_file:
         scrubber = ReportekFeedbackScrubber(autolink=True)
-        #scrubber = Scrubber(autolink=True)
+        # scrubber = Scrubber(autolink=True)
         output = scrubber.scrub(src_file.read())
         pretty_output = bs(output).prettify()
         sys.stdout.write(pretty_output)
