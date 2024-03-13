@@ -66,5 +66,5 @@ if __name__ == "__main__":
         scrubber = ReportekFeedbackScrubber(autolink=True)
         # scrubber = Scrubber(autolink=True)
         output = scrubber.scrub(src_file.read())
-        pretty_output = bs(output).prettify()
+        pretty_output = bs(output, features="lxml").prettify()
         sys.stdout.write(pretty_output)
