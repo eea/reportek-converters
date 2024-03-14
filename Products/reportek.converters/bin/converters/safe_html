@@ -32,8 +32,8 @@ class ReportekFeedbackScrubber(Scrubber):
                 continue
 
             # Remove disallowed attributes
-            attrs = []
-            for k, v in node.attrs:
+            attrs = {}
+            for k, v in node.attrs.items():
                 if not v and self.ignore_empty_attr:
                     continue
 
@@ -48,9 +48,8 @@ class ReportekFeedbackScrubber(Scrubber):
                 ):
                     continue
 
-                attrs.append((k, v))
+                attrs.update({k: v})
             node.attrs = attrs
-
         self._remove_nodes(toremove)
 
 
@@ -66,5 +65,8 @@ if __name__ == "__main__":
         scrubber = ReportekFeedbackScrubber(autolink=True)
         # scrubber = Scrubber(autolink=True)
         output = scrubber.scrub(src_file.read())
-        pretty_output = bs(output, features="lxml").prettify()
+        if not isinstance(output, bs):
+            pretty_output = bs(output, features="lxml").prettify()
+        else:
+            pretty_output = output.prettify()
         sys.stdout.write(pretty_output)
