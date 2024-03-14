@@ -13,6 +13,21 @@ class ReportekFeedbackScrubber(Scrubber):
     allowed_attributes = Scrubber.allowed_attributes | set(("i18n:translate",))
     ignore_empty_attr = False
 
+    def has_disallowed_val(self, val):
+        """Check if the value is disallowed."""
+        if not val:
+            return self.ignore_empty_attr
+
+        val = val.lower()
+        return any(
+            x in val
+            for x in (
+                "javascript:",
+                "vbscript:",
+                "expression(",
+            )
+        )
+
     def strip_disallowed(self, soup):
         """Remove nodes and attributes from the soup that aren't specifically allowed."""
         toremove = []
@@ -40,15 +55,15 @@ class ReportekFeedbackScrubber(Scrubber):
                 if k.lower() not in self.allowed_attributes:
                     continue
 
-                # TODO: This probably needs to be more robust
-                v2 = v.lower()
-                if any(
-                    x in v2
-                    for x in ("javascript:", "vbscript:", "expression(")
-                ):
-                    continue
+                if isinstance(v, list):
+                    res = []
+                    for val in v:
+                        if not self.has_disallowed_val(val):
+                            res.append(val)
+                else:
+                    res = v if not self.has_disallowed_val(v) else ""
 
-                attrs.update({k: v})
+                attrs.update({k: res})
             node.attrs = attrs
         self._remove_nodes(toremove)
 
