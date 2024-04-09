@@ -21,7 +21,7 @@ MarkupSafe==2.1.5
 openpyxl==3.1.2
 path==16.10.0
 path.py==12.5.0
-pillow==10.2.0
+pillow==10.3.0
 python-dateutil==2.8.1
 requests==2.31.0
 rpm==4.16.1.3
