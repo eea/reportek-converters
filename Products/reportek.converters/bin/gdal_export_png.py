@@ -7,7 +7,7 @@ import sys
 import os
 
 from tempfile import NamedTemporaryFile
-from path import path
+from path import Path
 
 from . import constants
 
@@ -45,13 +45,13 @@ if __name__ == '__main__':
             selected_height = constants.IMAGE_HEIGHT_TH
         if arguments.shx:
             tmp_dir = os.environ.get('TMPDIR', '.')
-            shp_path = (path(tmp_dir) / 'file.shp')
+            shp_path = (Path(tmp_dir) / 'file.shp')
             with shp_path.open('wb') as shp_file:
-                shp_file.write(path(arguments.src_file).open('rb').read())
+                shp_file.write(Path(arguments.src_file).open('rb').read())
 
-            shx_path = (path(tmp_dir) / 'file.shx')
+            shx_path = (Path(tmp_dir) / 'file.shx')
             with shx_path.open('wb') as shx_file:
-                shx_file.write(path(arguments.shx).open('rb').read())
+                shx_file.write(Path(arguments.shx).open('rb').read())
 
             rasterize_command_string = ('gdal_rasterize -q -l {layer}'
                                             ' -init 255'
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                                             ' {src} {dst}')
             format_params = { 'width': selected_width,
                               'height': selected_height,
-                              'layer': shp_path.namebase,
+                              'layer': shp_path.stem,
                               'src': shp_path,
                               'dst': gtiff_file.name }
         else:

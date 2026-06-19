@@ -1,5 +1,6 @@
 1.2.4-dev0 (unreleased)
 -----------------------
+* dependency updates, security fixes
 * Fixed prj_as_html
 * Fixed dbf_as_html
 

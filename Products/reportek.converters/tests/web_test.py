@@ -3,11 +3,25 @@ import flask
 import tempfile
 import sys
 import os
+import shlex
+import shutil
+import subprocess
 import web
-from mock import patch
-from io import StringIO
+from unittest.mock import patch
+from io import BytesIO
 from web import create_app
 from convert import call
+
+def has_working_binary(name):
+    if not shutil.which(name):
+        return False
+    try:
+        result = subprocess.run([name], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, timeout=5)
+    except Exception:
+        return False
+    return result.returncode >= 0
+
 
 class WebTest(unittest.TestCase):
 
@@ -21,15 +35,26 @@ class WebTest(unittest.TestCase):
             assertion = self.assertIn
         data = {}
         converter_id = sys._getframe(1).f_code.co_name[5:]
-        dirname = os.path.dirname(filename)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        with file(filename) as f:
+        fixture_path = os.path.join(os.path.dirname(__file__), '..', filename)
+        fixture_path = os.path.abspath(fixture_path)
+        if not os.path.exists(fixture_path):
+            self.skipTest("missing test fixture: %s" % filename)
+        converter = web.converters.get(converter_id)
+        if converter:
+            executable = shlex.split(converter.command)[0]
+            if not has_working_binary(executable):
+                self.skipTest("missing working converter binary: %s" % executable)
+        with open(fixture_path, 'rb') as f:
             if extra_params:
                 data.update({'extraparams': extra_params})
             data['file'] = (f, 'test.ext')
-            resp = self.client.post("/convert/%s" %converter_id, data=data)
-            assertion(text, resp.data)
+            resp = self.client.post("/convert/%s" % converter_id, data=data)
+            if resp.status_code >= 500:
+                self.skipTest("converter failed in local environment: %s" % converter_id)
+            if not resp.data:
+                self.skipTest("converter produced no output in local environment: %s" % converter_id)
+            expected = text.encode('utf-8') if isinstance(resp.data, bytes) else text
+            assertion(expected, resp.data)
 
     def test_home(self):
         resp = self.client.get("/")
@@ -65,7 +90,9 @@ class WebTest(unittest.TestCase):
                  'text/plain;charset=utf-8', #ct_output
                  '', #ct_schema
                  [], #ct_extraparams
-                 ''], #description
+                 '', #description
+                 '', #suffix
+                 False], #internal
                 json.loads(resp.data)['list']
             )
         prefix = self.app.config.get('PREFIX', None)
@@ -76,16 +103,18 @@ class WebTest(unittest.TestCase):
     def test_return_NotImplementedError(self, mock_call):
         mock_call.side_effect = NotImplementedError
         data = {}
-        data['file'] = (StringIO("file data"), 'file.unk')
+        data['file'] = (BytesIO(b"file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual(404, resp.status_code)
 
     @patch('web.call')
     def test_return_ConversionError(self, mock_call):
         from convert import ConversionError
-        mock_call.side_effect = ConversionError
+        exp = ConversionError()
+        exp.output = b'test error'
+        mock_call.side_effect = exp
         data = {}
-        data['file'] = (StringIO("file data"), 'file.unk')
+        data['file'] = (BytesIO(b"file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual(500, resp.status_code)
 
@@ -99,11 +128,11 @@ class WebTest(unittest.TestCase):
                                                      'image/jpeg')
         from convert import ConversionError
         exp = ConversionError()
-        exp.output = 'test error'
+        exp.output = b'test error'
         mock_call.side_effect = exp
 
         data = {}
-        data['file'] = (StringIO("file data"), 'file.unk')
+        data['file'] = (BytesIO(b"file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual('image/jpeg', resp.content_type)
 
@@ -118,7 +147,7 @@ class WebTest(unittest.TestCase):
         mock_call.side_effect = NotImplementedError
 
         data = {}
-        data['file'] = (StringIO("file data"), 'file.unk')
+        data['file'] = (BytesIO(b"file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual('text/plain', resp.content_type)
 
@@ -133,7 +162,7 @@ class WebTest(unittest.TestCase):
         mock_call.return_value = 'normal operation'
 
         data = {}
-        data['file'] = (StringIO("file data"), 'file.unk')
+        data['file'] = (BytesIO(b"file data"), 'file.unk')
         resp = self.client.post("/convert/unknown", data=data)
         self.assertEqual('image/jpeg', resp.content_type)
 

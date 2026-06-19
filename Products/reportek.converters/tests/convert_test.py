@@ -1,6 +1,7 @@
+import tempfile
 import unittest
 from utils import mime_types
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 from web import create_app
 
 
@@ -74,7 +75,7 @@ class ConvertTest(unittest.TestCase):
         )
         import web
         import flask
-        from path import path
+        from path import Path
         from convert import init_converters
         import io
 
@@ -82,11 +83,12 @@ class ConvertTest(unittest.TestCase):
         mock_converters.get = Mock(return_value=converters['mock_converter'])
 
         files = {
-            'file': (io.StringIO('shp data'), 'file.shp'),
-            'shx': (io.StringIO('shx data'), 'file.shx'),
-            'dbf': (io.StringIO('dbf data'), 'file.dbf')
+            'file': (io.BytesIO(b'shp data'), 'file.shp'),
+            'shx': (io.BytesIO(b'shx data'), 'file.shx'),
+            'dbf': (io.BytesIO(b'dbf data'), 'file.dbf')
         }
         resp = self.client.post("/convert/mock_converter", data=files)
         self.assertEqual(2, len(mock_call.mock_calls[0][1][2]))
-        assert path(mock_call.mock_calls[0][1][2][0]).startswith('/tmp/')
-        assert path(mock_call.mock_calls[0][1][2][1]).startswith('/tmp/')
+        tmp_dir = tempfile.gettempdir()
+        assert Path(mock_call.mock_calls[0][1][2][0]).startswith(tmp_dir)
+        assert Path(mock_call.mock_calls[0][1][2][1]).startswith(tmp_dir)

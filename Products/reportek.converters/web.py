@@ -76,7 +76,7 @@ def convert(name):
     if not document:
         import io
 
-        document = io.StringIO(flask.request.data)
+        document = io.BytesIO(flask.request.data)
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         chunk = True
         while chunk:
@@ -103,8 +103,8 @@ def convert(name):
                 )
                 shx_filepath = ".".join([tmp.name, "shx"])
                 dbf_filepath = ".".join([tmp.name, "dbf"])
-                tmp_shx = open(shx_filepath, "w")
-                tmp_dbf = open(dbf_filepath, "w")
+                tmp_shx = open(shx_filepath, "wb")
+                tmp_dbf = open(dbf_filepath, "wb")
                 tmp_shx.write(shx_doc.read())
                 tmp_dbf.write(dbf_doc.read())
                 tmp_shx.flush()
@@ -121,9 +121,10 @@ def convert(name):
             else:
                 response = call(name, tmp.name, list(extra_params))
         except ConversionError as exp:
-            response = base64.b64encode(exp.output)
+            response = base64.b64encode(getattr(exp, "output", b""))
             status = 500
-            content_type = converters.get(name).ct_output
+            converter = converters.get(name)
+            content_type = converter.ct_output if converter else "text/plain"
         except NotImplementedError as exp:
             response = ""
             status = 404

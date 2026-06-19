@@ -22,7 +22,7 @@ class ConversionError(Exception):
 
 
 def init_converters():
-    config_path = Path(__file__).parent.abspath() / "config"
+    config_path = Path(__file__).parent.absolute() / "config"
     params = json.loads((config_path / "converters.json").bytes())
     return {args.get("name"): Converter(**args) for args in params}
 
@@ -32,6 +32,7 @@ def call(converter_id, filename, extra_args=[]):
     converter = converters.get(converter_id, None)
     if converter:
         command = converter.command
+        package_dir = Path(__file__).parent.absolute()
         tmp_dir = tempfile.mkdtemp(prefix="tmp")
         try:
             virtualenv_aware_path = (
@@ -43,8 +44,8 @@ def call(converter_id, filename, extra_args=[]):
                 cwd=tmp_dir,
                 env=dict(
                     os.environ,
-                    SCRIPTS=Path(os.getcwd()) / "bin",
-                    LIB=Path(os.getcwd()) / "lib",
+                    SCRIPTS=package_dir / "bin",
+                    LIB=package_dir / "lib",
                     TMPDIR=tmp_dir,
                     TEMP=tmp_dir,
                     TMP=tmp_dir,

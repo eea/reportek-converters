@@ -1,11 +1,25 @@
 # encoding: utf-8
+import shutil
+import subprocess
 import unittest
-from path import path
+from path import Path
 
 
-sz_data = path(__file__).parent / 'sz_data'
+sz_data = Path(__file__).parent / 'sz_data'
 
 
+def has_working_binary(name):
+    if not shutil.which(name):
+        return False
+    try:
+        result = subprocess.run([name], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, timeout=5)
+    except Exception:
+        return False
+    return result.returncode >= 0
+
+
+@unittest.skipUnless(has_working_binary('7za'), 'missing working 7za binary')
 class SevenZipTest(unittest.TestCase):
 
     def test_list_7zip_returns_empty_list_for_empty_archive(self):
