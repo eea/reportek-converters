@@ -1,5 +1,7 @@
 1.2.4-dev0 (unreleased)
 -----------------------
+* Fixed prj_as_html
+* Fixed dbf_as_html
 
 1.2.3 (2021-03-24)
 ------------------
