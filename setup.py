@@ -17,7 +17,6 @@ setup(name=NAME,
       author_email='eea-edw-c-team-alerts@googlegroups.com',
       url='https://github.com/eea/reportek-converters',
 
-      setup_requires = [ "setuptools_git >= 1.0", ],
       license='GPL',
       packages=find_packages(),
       include_package_data=True,

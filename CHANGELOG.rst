@@ -1,3 +1,7 @@
+1.2.5 (2026-06-22)
+------------------
+* fix: added setuptools_git in requires
+
 1.2.4 (2026-06-22)
 ------------------
 * dependency updates, security fixes
