@@ -1,5 +1,5 @@
-1.2.4-dev0 (unreleased)
------------------------
+1.2.4 (2026-06-22)
+------------------
 * dependency updates, security fixes
 * Fixed prj_as_html
 * Fixed dbf_as_html
