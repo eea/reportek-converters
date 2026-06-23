@@ -28,6 +28,19 @@ from lxml import etree
 from copy import deepcopy
 
 
+def node_to_dict(node):
+    """Convert an XML node to the metadata shape expected by Reportek.
+
+    Leaf nodes should become scalar values even if they carry attributes,
+    otherwise metadata consumers such as get_transaction_year() receive a dict
+    and fail when coercing the year to int.
+    """
+    tag = etree.QName(node).localname
+    if len(node) == 0:
+        return {tag: (node.text or "")}
+    return xmltodict.parse(etree.tostring(node), process_namespaces=True)
+
+
 def xml_to_json(xml, xpaths):
     tree = etree.parse(xml)
     root = tree.getroot()
@@ -39,8 +52,7 @@ def xml_to_json(xml, xpaths):
         for p in xpaths:
             res = []
             for node in root.xpath(p):
-                res.append(xmltodict.parse(etree.tostring(node),
-                                           process_namespaces=True))
+                res.append(node_to_dict(node))
             result[p] = res
 
     return json.dumps(result, indent=4)
