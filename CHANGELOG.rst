@@ -1,3 +1,7 @@
+1.2.6 (2026-06-22)
+------------------
+* fix: fixed egg packaging
+
 1.2.5 (2026-06-22)
 ------------------
 * fix: added setuptools_git in requires
