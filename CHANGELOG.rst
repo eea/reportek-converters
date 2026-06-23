@@ -1,3 +1,7 @@
+1.2.9 (2026-06-23)
+------------------
+* fix: clean metadata from xml in xml_to_json
+
 1.2.8 (2026-06-23)
 ------------------
 * fix: fixed xml_to_json regression

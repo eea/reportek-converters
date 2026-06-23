@@ -36,3 +36,13 @@ class XmlToJsonTest(unittest.TestCase):
             {"Gamma": {"Delta": "three"}},
             result["//Gamma"][0],
         )
+
+    def test_selected_subtrees_do_not_include_namespace_declarations(self):
+        result = self.convert(
+            '<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+            '<Gamma><Delta xsi:nil="true" /></Gamma>'
+            '</Root>',
+            ["//Gamma"],
+        )
+
+        self.assertNotIn("@xmlns", result["//Gamma"][0]["Gamma"])

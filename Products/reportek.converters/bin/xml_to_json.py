@@ -28,17 +28,38 @@ from lxml import etree
 from copy import deepcopy
 
 
+def clean_metadata(value):
+    """Remove XML parser artefacts from metadata extracted by XPath.
+
+    Serialising a selected subtree can add namespace declarations such as
+    ``xmlns:xsi`` to the subtree root. xmltodict exposes those declarations as
+    ``@xmlns`` keys, but Reportek metadata consumers expect the old clean shape
+    without namespace bookkeeping.
+    """
+    if isinstance(value, dict):
+        return {
+            key: clean_metadata(item)
+            for key, item in value.items()
+            if key != "@xmlns"
+        }
+    if isinstance(value, list):
+        return [clean_metadata(item) for item in value]
+    return value
+
+
 def node_to_dict(node):
     """Convert an XML node to the metadata shape expected by Reportek.
 
-    Leaf nodes should become scalar values even if they carry attributes,
-    otherwise metadata consumers such as get_transaction_year() receive a dict
-    and fail when coercing the year to int.
+    Leaf nodes should become scalar values even if namespace declarations are
+    present, otherwise metadata consumers such as get_transaction_year() receive
+    a dict and fail when coercing the year to int.
     """
     tag = etree.QName(node).localname
     if len(node) == 0:
         return {tag: (node.text or "")}
-    return xmltodict.parse(etree.tostring(node), process_namespaces=True)
+    return clean_metadata(
+        xmltodict.parse(etree.tostring(node), process_namespaces=True)
+    )
 
 
 def xml_to_json(xml, xpaths):
