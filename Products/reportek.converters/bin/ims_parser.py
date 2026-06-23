@@ -22,72 +22,75 @@ __doc__ = """
       ARC IMS response parser module
 """
 
+from io import StringIO
+from xml.sax import *
 from xml.sax.handler import ContentHandler
-from xml.sax         import *
-from io       import StringIO
-from types           import StringType
 
-from .ims_object      import IMSObject
+StringType = str
 
-_DATA_TAGS = ['ERROR']
+from .ims_object import IMSObject
+
+_DATA_TAGS = ["ERROR"]
+
 
 def ims_response_import(file):
 
     ims_res_val = IMSObject()
     parser = ims_res_parser()
 
-    #parse the ins response information
+    # parse the ins response information
     chandler = parser.parseHeader(file, ims_res_val)
     ims_res_obj = chandler.getIMSRespVal()
 
-    #return an IMSResponse object 
+    # return an IMSResponse object
     return ims_res_obj
 
 
 class ims_res_handler(ContentHandler):
-    """ This is used to parse the ims response xml
-    """
+    """This is used to parse the ims response xml"""
+
     def __init__(self, ims_res_val):
-        """ constructor """
+        """constructor"""
         self.ims_res_val = ims_res_val
-        self.__currentTag = ''
+        self.__currentTag = ""
         self.__data = []
-        self.__tagout=''
+        self.__tagout = ""
 
     def getIMSRespVal(self):
         return self.ims_res_val
 
     def startElement(self, name, attrs):
-        if name == 'ENVELOPE':
+        if name == "ENVELOPE":
             for elem in list(attrs.keys()):
-                if elem == 'minx':
-                    self.ims_res_val.setMinx(attrs['minx'])
-                if elem == 'miny':
-                    self.ims_res_val.setMiny(attrs['miny'])
-                if elem == 'maxx':
-                    self.ims_res_val.setMaxx(attrs['maxx'])
-                if elem == 'maxy':
-                    self.ims_res_val.setMaxy(attrs['maxy'])
-        if name == 'OUTPUT':
+                if elem == "minx":
+                    self.ims_res_val.setMinx(attrs["minx"])
+                if elem == "miny":
+                    self.ims_res_val.setMiny(attrs["miny"])
+                if elem == "maxx":
+                    self.ims_res_val.setMaxx(attrs["maxx"])
+                if elem == "maxy":
+                    self.ims_res_val.setMaxy(attrs["maxy"])
+        if name == "OUTPUT":
             for elem in list(attrs.keys()):
-                if elem == 'url':
-                    self.ims_res_val.setUrl(attrs['url'])
+                if elem == "url":
+                    self.ims_res_val.setUrl(attrs["url"])
 
         self.__currentTag = name
 
     def endElement(self, name):
-        self.__currentTag = ''
+        self.__currentTag = ""
         if name in _DATA_TAGS:
-            self.ims_res_val.setIms_error(''.join(self.__data).strip())
+            self.ims_res_val.setIms_error("".join(self.__data).strip())
             print(self.ims_res_val.getIms_error())
-            
+
     def characters(self, content):
         currentTag = self.__currentTag
         if currentTag in _DATA_TAGS:
             self.__data.append(content)
 
+
 class ims_res_parser:
-    """ class for parse ims files """
+    """class for parse ims files"""
 
     def __init__(self):
         """ """

@@ -3,85 +3,50 @@
 import argparse
 import sys
 
+import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from bs4 import BeautifulSoup as bs
-from bs4 import Comment
-from scrubber import Scrubber
 
 
-class ReportekFeedbackScrubber(Scrubber):
-    # we might need all i18n and tal/metal attributes added here...
-    allowed_attributes = Scrubber.allowed_attributes | set(("i18n:translate",))
-    ignore_empty_attr = False
+ALLOWED_TAGS = [
+    "a", "abbr", "acronym", "b", "blockquote", "br", "cite", "code",
+    "dd", "del", "dfn", "div", "dl", "dt", "em", "h1", "h2", "h3",
+    "h4", "h5", "h6", "hr", "i", "img", "ins", "kbd", "li", "ol",
+    "p", "pre", "q", "s", "samp", "span", "strike", "strong", "sub",
+    "sup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "tt",
+    "ul", "var",
+]
 
-    def has_disallowed_val(self, val):
-        """Check if the value is disallowed."""
-        if not val:
-            return self.ignore_empty_attr
+ALLOWED_ATTRIBUTES = [
+    "abbr", "alt", "cite", "class", "colspan", "datetime", "height",
+    "href", "i18n:translate", "id", "name", "rel", "rowspan", "src",
+    "style", "title", "width",
+]
 
-        val = val.lower()
-        return any(
-            x in val
-            for x in (
-                "javascript:",
-                "vbscript:",
-                "expression(",
-            )
-        )
+ALLOWED_PROTOCOLS = ["http", "https", "mailto"]
 
-    def strip_disallowed(self, soup):
-        """Remove nodes and attributes from the soup that aren't specifically allowed."""
-        toremove = []
-        for node in soup.recursiveChildGenerator():
-            if self.remove_comments and isinstance(node, Comment):
-                toremove.append((False, node))
-                continue
 
-            if isinstance(node, str):
-                continue
+def scrub(html):
+    """Sanitize HTML while preserving Reportek feedback markup."""
+    soup = bs(html, features="lxml")
+    for node in soup(["script", "style"]):
+        node.decompose()
 
-            # Remove disallowed tags
-            if node.name not in self.allowed_tags:
-                toremove.append(
-                    (node.name in self.disallowed_tags_save_content, node)
-                )
-                continue
-
-            # Remove disallowed attributes
-            attrs = {}
-            for k, v in node.attrs.items():
-                if not v and self.ignore_empty_attr:
-                    continue
-
-                if k.lower() not in self.allowed_attributes:
-                    continue
-
-                if isinstance(v, list):
-                    res = []
-                    for val in v:
-                        if not self.has_disallowed_val(val):
-                            res.append(val)
-                else:
-                    res = v if not self.has_disallowed_val(v) else ""
-
-                attrs.update({k: res})
-            node.attrs = attrs
-        self._remove_nodes(toremove)
+    cleaned = bleach.clean(
+        str(soup),
+        tags=ALLOWED_TAGS,
+        attributes=ALLOWED_ATTRIBUTES,
+        protocols=ALLOWED_PROTOCOLS,
+        css_sanitizer=CSSSanitizer(),
+        strip=True,
+        strip_comments=True,
+    )
+    return bs(cleaned, features="lxml")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="HTML sanitizer using Scrubber"
-    )
-    parser.add_argument(
-        "src_file", metavar="src-file", help="path to html file"
-    )
+    parser = argparse.ArgumentParser(description="HTML sanitizer")
+    parser.add_argument("src_file", metavar="src-file", help="path to html file")
     params = parser.parse_args()
     with open(params.src_file, "rb") as src_file:
-        scrubber = ReportekFeedbackScrubber(autolink=True)
-        # scrubber = Scrubber(autolink=True)
-        output = scrubber.scrub(src_file.read())
-        if not isinstance(output, bs):
-            pretty_output = bs(output, features="lxml").prettify()
-        else:
-            pretty_output = output.prettify()
-        sys.stdout.write(pretty_output)
+        sys.stdout.write(scrub(src_file.read()).prettify())

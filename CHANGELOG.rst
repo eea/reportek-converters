@@ -1,3 +1,10 @@
+1.2.7 (2026-06-23)
+------------------
+* feat: fixed conversion scripts issues
+* feat: dumped scrubber for bleach
+* feat: added console_scripts entrypoints
+* fix: fixed namespace
+
 1.2.6 (2026-06-22)
 ------------------
 * fix: fixed egg packaging

@@ -18,14 +18,13 @@ def has_working_binary(name):
     return result.returncode >= 0
 
 
-@unittest.skipUnless(has_working_binary('unrar'), 'missing working unrar binary')
+@unittest.skipUnless(has_working_binary('lsar'), 'missing working lsar binary')
 class RarConverterTest(unittest.TestCase):
 
     def test_rar2list_returns_listing_with_one_file(self):
         from convert import call
         result = call('rar2list', str(rar_data / 'onefile.rar'))
-        self.assertIn('fisier.txt', result)
-        self.assertIn('04-09-12', result)
+        self.assertIn(b'fisier.txt', result)
 
     def test_rar2list_with_unicode_characters_returns_contents(self):
         from convert import call

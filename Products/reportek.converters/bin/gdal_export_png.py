@@ -86,11 +86,11 @@ if __name__ == '__main__':
         except OSError:
             pass
 
-        with NamedTemporaryFile(mode='w+') as png_file:
+        with NamedTemporaryFile(mode='w+b') as png_file:
             translate_command_string = ('gdal_translate -q -ot Byte'
                                         ' -of PNG {0} {1}')
             translate_command = translate_command_string.format(
                                     gtiff_file.name,
                                     png_file.name)
             subprocess.check_call(shlex.split(translate_command))
-            sys.stdout.write(png_file.read())
+            sys.stdout.buffer.write(png_file.read())

@@ -49,7 +49,7 @@
     },
     {
         "name": "flash_ext_png",
-        "command": "python $SCRIPTS/flash_ext_png.py --gml {0} --minx {1} --miny {2} --maxx {3} --maxy {4} --server {5} --service {6}",
+        "command": "reportek-flash-ext-png --gml {0} --minx {1} --miny {2} --maxx {3} --maxy {4} --server {5} --service {6}",
         "accepted_content_types": ["text/xml"],
         "title": "Flash print extension",
         "ct_schema": "XXXXXXXXXXXXXX",
@@ -57,7 +57,7 @@
     },
     {
         "name": "gmltoshp",
-        "command": "python $SCRIPTS/gml_to_shp.py --gml {0} --schema {1}",
+        "command": "reportek-gml-to-shp --gml {0} --schema {1}",
         "accepted_content_types": ["text/xml"],
         "title": "Download map as zipped ESRI shape files",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -65,7 +65,7 @@
     },
     {
         "name": "gmltokml",
-        "command": "python $SCRIPTS/gml_to_kml.py --gml {0}",
+        "command": "reportek-gml-to-kml --gml {0}",
         "accepted_content_types": ["text/xml"],
         "title": "Display map in Google Earth viewer",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -73,7 +73,7 @@
     },
     {
         "name": "gmltopng_thumb_bg",
-        "command": "python $SCRIPTS/gml_to_png_thumbnail_bg.py --gml {0} --country {1}",
+        "command": "reportek-gml-to-png-thumbnail-bg --gml {0} --country {1}",
         "accepted_content_types": ["text/xml"],
         "title": "View map as PNG image (thumbnail with background)",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -82,7 +82,7 @@
     },
     {
         "name": "gmltopng",
-        "command": "python $SCRIPTS/gdal_export_png.py {0}",
+        "command": "reportek-gdal-export-png {0}",
         "accepted_content_types": ["text/xml"],
         "title": "View map as PNG image without background",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -90,7 +90,7 @@
     },
     {
         "name": "gmltopng_thumb",
-        "command": "python $SCRIPTS/gdal_export_png.py --thumb {0}",
+        "command": "reportek-gdal-export-png --thumb {0}",
         "accepted_content_types": ["text/xml"],
         "title": "View map as PNG image (thumbnail without background)",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -98,7 +98,7 @@
     },
     {
         "name": "gmltopng_bg",
-        "command": "python $SCRIPTS/gml_to_png_bg.py --gml {0} --country {1}",
+        "command": "reportek-gml-to-png-bg --gml {0} --country {1}",
         "accepted_content_types": ["text/xml"],
         "title": "View map as PNG image with background",
         "ct_schema": "http://biodiversity.eionet.europa.eu/schemas/dir9243eec/gml_art17.xsd",
@@ -106,7 +106,7 @@
     },
     {
         "name": "rar2list",
-        "command": "unrar l {0}",
+        "command": "lsar {0}",
         "accepted_content_types": [
             "application/x-rar-compressed",
             "application/rar"
@@ -116,21 +116,21 @@
     },
     {
         "name": "rar2list2",
-        "command": "unrar l {0}",
+        "command": "lsar {0}",
         "accepted_content_types": ["application/rar"],
         "title": "List of contents",
         "returned_content_type": "text/plain;charset=utf-8"
     },
     {
         "name": "dbf_as_html",
-        "command": "$SCRIPTS/converters/dbf_to_html {0}",
+        "command": "reportek-dbf-to-html {0}",
         "accepted_content_types": ["application/x-dbf"],
         "title": "Show as HTML",
         "returned_content_type": "text/html"
     },
     {
         "name": "prj_as_html",
-        "command": "$SCRIPTS/converters/prj_as_html {0}",
+        "command": "reportek-prj-as-html {0}",
         "accepted_content_types": ["application/x-prj"],
         "title": "Show formatted",
         "returned_content_type": "text/html"
@@ -162,7 +162,7 @@
     },
     {
         "name": "shp2img",
-        "command": "$SCRIPTS/gdal_export_png.py {0} --shx {1} --dbf {2}",
+        "command": "reportek-gdal-export-png {0} --shx {1} --dbf {2}",
         "accepted_content_types": ["application/x-shp"],
         "title": "Show shapefile as image",
         "returned_content_type": "image/jpeg",
@@ -201,14 +201,14 @@
     },
     {
         "name": "safe_html",
-        "command": "$SCRIPTS/converters/safe_html {0}",
+        "command": "reportek-safe-html {0}",
         "accepted_content_types": ["text/html"],
         "title": "Sanitize HTML",
         "returned_content_type": "text/html;charset=UTF-8"
     },
     {
         "name": "mmr_p_xls_xml",
-        "command": "python -W ignore $SCRIPTS/mmr_p_xls_xml.py {0}",
+        "command": "reportek-mmr-p-xls-xml {0}",
         "accepted_content_types": [
             "application/vnd.ms-excel.sheet.macroEnabled.12",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -222,7 +222,7 @@
     },
     {
         "name": "xml_to_json",
-        "command": "python -W ignore $SCRIPTS/xml_to_json.py {0} --k {1}",
+        "command": "reportek-xml-to-json {0} --k {1}",
         "accepted_content_types": ["text/xml"],
         "title": "XML to JSON",
         "internal": true,

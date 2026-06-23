@@ -23,16 +23,17 @@ __doc__ = """
 """
 
 
-from .kml_generator  import KMLGenerator
-from .gml            import GMLStructure
-from .gml_parser     import gml_import
-from .utils          import utOpen, transcalc
-from .constants      import *
-
-from string         import strip
-
-import sys, os, math
+import math
 import optparse
+import os
+import sys
+
+from .constants import *
+from .gml import GMLStructure
+from .gml_parser import gml_import
+from .kml_generator import KMLGenerator
+from .utils import transcalc, utOpen
+
 try:
     import msvcrt
 except:
@@ -41,64 +42,72 @@ except:
 # Allow only 30 seconds of CPU time (Linux only)
 try:
     import resource
-    resource.setrlimit(resource.RLIMIT_CPU,(30,30))
+
+    resource.setrlimit(resource.RLIMIT_CPU, (30, 30))
 except:
     pass
 
 
 def gml_to_kml(gml_file):
-    #generate name
-    name = gml_file[:gml_file.rfind('.')]
+    # generate name
+    name = gml_file[: gml_file.rfind(".")]
 
     input_gml = utOpen(gml_file)
     conv_gml = GMLStructure()
     conv_gml.setGeo_name(name)
 
     # fill geometry
-    conv_gml = gml_import(input_gml.read(),conv_gml)
+    conv_gml = gml_import(input_gml.read(), conv_gml)
 
     # GML output
     kml_generator = KMLGenerator()
 
     kml_data = kml_generator.fillKMLHeader()
     kml_data += kml_generator.fillKMLStyle()
-    if conv_gml.getFeat_type() == '1':
+    if conv_gml.getFeat_type() == "1":
         for m in range(len(conv_gml.getShp_records())):
-            for n in range (len(conv_gml.getShp_records()[m])):
-                    x,y = transcalc((conv_gml.getShp_records()[m][n])[0][0],(conv_gml.getShp_records()[m][n])[0][1],10)
-                    kml_data += kml_generator.fillKMLPoint("", x, y)
-    elif conv_gml.getFeat_type() == '3':
+            for n in range(len(conv_gml.getShp_records()[m])):
+                x, y = transcalc(
+                    (conv_gml.getShp_records()[m][n])[0][0],
+                    (conv_gml.getShp_records()[m][n])[0][1],
+                    10,
+                )
+                kml_data += kml_generator.fillKMLPoint("", x, y)
+    elif conv_gml.getFeat_type() == "3":
         for m in range(len(conv_gml.getShp_records())):
             thelist = []
-            temp_thelist = thelist.append 
-            for k in range (len(conv_gml.getShp_records()[m])):
+            temp_thelist = thelist.append
+            for k in range(len(conv_gml.getShp_records()[m])):
                 mylist = []
-                temp_mylist = mylist.append 
-                for j in ((conv_gml.getShp_records()[m])[k]):
-                    temp_mylist(transcalc(j[0],j[1],10))
+                temp_mylist = mylist.append
+                for j in (conv_gml.getShp_records()[m])[k]:
+                    temp_mylist(transcalc(j[0], j[1], 10))
                 temp_thelist(mylist)
             kml_data += kml_generator.fillKMLLine("", thelist)
-    elif conv_gml.getFeat_type() == '5':
+    elif conv_gml.getFeat_type() == "5":
         for m in range(len(conv_gml.getShp_records())):
             thelist = []
-            temp_thelist = thelist.append 
-            for k in range (len(conv_gml.getShp_records()[m])):
+            temp_thelist = thelist.append
+            for k in range(len(conv_gml.getShp_records()[m])):
                 mylist = []
-                temp_mylist = mylist.append 
-                for j in ((conv_gml.getShp_records()[m])[k]):
-                    temp_mylist(transcalc(j[0],j[1],10))
+                temp_mylist = mylist.append
+                for j in (conv_gml.getShp_records()[m])[k]:
+                    temp_mylist(transcalc(j[0], j[1], 10))
                 temp_thelist(mylist)
             kml_data += kml_generator.fillKMLPoly("", thelist)
     kml_data += kml_generator.fillKMLFooter()
     return kml_data
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = optparse.OptionParser()
 
-    parser.add_option('--gml')
+    parser.add_option("--gml")
 
-    try:    options, args = parser.parse_args()
-    except: options = None
+    try:
+        options, args = parser.parse_args()
+    except:
+        options = None
 
     if not options or not options.gml:
         print(__doc__)

@@ -24,11 +24,13 @@ __doc__ = """
 """
 
 
+from io import StringIO
+from xml.sax import *
 from xml.sax.handler import ContentHandler
-from xml.sax         import *
-from io       import StringIO
-from types           import StringType
-from .constants       import *
+
+StringType = str
+from .constants import *
+
 
 def prj_import(file):
     """ """
@@ -39,15 +41,15 @@ def prj_import(file):
     retPrj = chandler.getPrjData()
     return retPrj
 
+
 class prj_handler(ContentHandler):
-    """ This is used to parse the GML files
-    """
+    """This is used to parse the GML files"""
 
     def __init__(self):
-        """ constructor """
-        self.__currentTag = ''
+        """constructor"""
+        self.__currentTag = ""
         self.__data = []
-        self.__retPrj = ''
+        self.__retPrj = ""
 
     def getPrjData(self):
         return self.__retPrj
@@ -58,12 +60,10 @@ class prj_handler(ContentHandler):
     def endElement(self, name):
 
         if name in PROJECTION_LABELS:
-            self.__retPrj = ''.join(self.__data).strip()
-
+            self.__retPrj = "".join(self.__data).strip()
 
         self.__data = []
-        self.__currentTag = ''
-
+        self.__currentTag = ""
 
     def characters(self, content):
         currentTag = self.__currentTag
@@ -71,9 +71,8 @@ class prj_handler(ContentHandler):
             self.__data.append(content)
 
 
-
 class prj_parser:
-    """ class for parse GML Metadata files """
+    """class for parse GML Metadata files"""
 
     def __init__(self):
         """ """
@@ -106,7 +105,7 @@ class prj_parser:
         except:
             pass
         inputsrc = InputSource()
-        
+
         if type(file) is StringType:
             inputsrc.setByteStream(StringIO(file))
         else:
@@ -114,7 +113,7 @@ class prj_parser:
             inputsrc.setByteStream(StringIO(filecontent))
         parser.parse(inputsrc)
         return chandler
-        
+
         try:
             if type(file) is StringType:
                 inputsrc.setByteStream(StringIO(file))
@@ -124,4 +123,4 @@ class prj_parser:
             parser.parse(inputsrc)
             return chandler
         except:
-            return None    
+            return None

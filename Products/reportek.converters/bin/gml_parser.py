@@ -23,150 +23,152 @@ __doc__ = """
     GML parser module
 """
 
+from io import StringIO
+from xml.sax import *
 from xml.sax.handler import ContentHandler
-from xml.sax         import *
-from io       import StringIO
-from types           import StringType
 
-_DATA_TAGS = ['gml:X', 'gml:Y', 'gml:coordinates']
+StringType = str
+
+_DATA_TAGS = ["gml:X", "gml:Y", "gml:coordinates"]
 _DATA_SD_TAGS = []
-_DATA_ID = ''
+_DATA_ID = ""
+
 
 def gml_import(file, struct_gml):
     """ """
-    #fill special tag name
-    _DATA_ID = 'reportnet'
+    # fill special tag name
+    _DATA_ID = "reportnet"
 
-    #fill data tags from schema    
+    # fill data tags from schema
     dt_ap = _DATA_SD_TAGS.append
     for i in range(len(struct_gml.getRec_dbf())):
         ttype, tname, tlen, tdecc = (struct_gml.getRec_dbf())[i]
-        dt_ap ('%s' % tname)
+        dt_ap("%s" % tname)
 
-    #parse the GML information
+    # parse the GML information
     parser = gml_parser()
-    chandler = parser.parseHeader(file,struct_gml)
+    chandler = parser.parseHeader(file, struct_gml)
     chandler.setBoundBox()
 
     ret_struct_gml = chandler.getGMLData()
 
     return ret_struct_gml
 
+
 class gml_handler(ContentHandler):
-    """ This is used to parse the GML files
-    """
+    """This is used to parse the GML files"""
 
     def __init__(self, struct_gml):
-        """ constructor """
+        """constructor"""
         # struct_gml
         self.struct_gml = struct_gml
-        
-        self.__currentTag = ''
+
+        self.__currentTag = ""
         self.__data = []
         self.__data_sd = []
-        self.e_fID = ''
-        self.x_min = ''
-        self.y_min = ''
-        self.x_max = ''
-        self.y_max = ''
+        self.e_fID = ""
+        self.x_min = ""
+        self.y_min = ""
+        self.x_max = ""
+        self.y_max = ""
         self.l_coord_marker = 0
         self.l_polygon_marker = 0
         self.l_line_marker = 0
 
     def getGMLData(self):
-        return self.struct_gml        
+        return self.struct_gml
 
     def setBoundBox(self):
-        self.struct_gml.setXY_min (self.x_min, self.y_min)
-        self.struct_gml.setXY_max (self.x_max, self.y_max)
+        self.struct_gml.setXY_min(self.x_min, self.y_min)
+        self.struct_gml.setXY_max(self.x_max, self.y_max)
 
     def startElement(self, name, attrs):
         if name == _DATA_ID:
             for elem in list(attrs.keys()):
-                if elem == 'fid':
-                    self.struct_gml.setFid(attrs['fid'])
+                if elem == "fid":
+                    self.struct_gml.setFid(attrs["fid"])
 
-        if name == 'gml:Polygon':
-            self.l_polygon_marker = 1 
+        if name == "gml:Polygon":
+            self.l_polygon_marker = 1
 
-        if name == 'gml:LineString':
+        if name == "gml:LineString":
             self.l_line_marker = 1
 
         self.__currentTag = name
-       
+
     def endElement(self, name):
-        #START bounding box
-        if name == 'gml:X':
+        # START bounding box
+        if name == "gml:X":
             if self.l_coord_marker:
-                self.x_max = ''.join(self.__data).strip()
+                self.x_max = "".join(self.__data).strip()
             else:
-                self.x_min = ''.join(self.__data).strip()
+                self.x_min = "".join(self.__data).strip()
             self.__data = []
-                
-        if name == 'gml:Y':
+
+        if name == "gml:Y":
             if self.l_coord_marker:
-                self.y_max = ''.join(self.__data).strip()
+                self.y_max = "".join(self.__data).strip()
             else:
-                self.y_min = ''.join(self.__data).strip()
+                self.y_min = "".join(self.__data).strip()
             self.__data = []
-        #END bounding box  
-        
-        #START geometry
-        if name == 'gml:coordinates':
+        # END bounding box
+
+        # START geometry
+        if name == "gml:coordinates":
             tup_final = []
-            listver = (''.join(self.__data).strip()).split(' ')
+            listver = ("".join(self.__data).strip()).split(" ")
             for ver in listver:
-                tup = ver.split(',')
+                tup = ver.split(",")
                 tupa = tup[0]
                 tupb = tup[1]
-                tup_final.append ((float(tupa),float(tupb)))
+                tup_final.append((float(tupa), float(tupb)))
             self.struct_gml.setRec_parts(tup_final)
-            #clean
+            # clean
             self.struct_gml.resetRec_vertices()
-            self.__data = []    
+            self.__data = []
 
-        if name == 'gml:Point':
-            self.struct_gml.setFeat_type('1')
+        if name == "gml:Point":
+            self.struct_gml.setFeat_type("1")
             self.struct_gml.setShp_records()
             self.struct_gml.resetRec_parts()
 
-        if name == 'gml:LineString':
-            self.struct_gml.setFeat_type('3')
+        if name == "gml:LineString":
+            self.struct_gml.setFeat_type("3")
 
-        if name == 'gml:Polygon':
-            self.struct_gml.setFeat_type('5') 
+        if name == "gml:Polygon":
+            self.struct_gml.setFeat_type("5")
 
-        if name == 'gml:featureMember':
-            if self.struct_gml.getFeat_type() == '5':
+        if name == "gml:featureMember":
+            if self.struct_gml.getFeat_type() == "5":
                 if self.l_polygon_marker:
                     self.struct_gml.setShp_records()
                     self.struct_gml.resetRec_parts()
-            if self.struct_gml.getFeat_type() == '3':
+            if self.struct_gml.getFeat_type() == "3":
                 if self.l_line_marker:
                     self.struct_gml.setShp_records()
                     self.struct_gml.resetRec_parts()
-            
-        if name == 'gml:coord':
+
+        if name == "gml:coord":
             self.l_coord_marker = 1
-        #END geometry
-        #Start DBF data tags    
+        # END geometry
+        # Start DBF data tags
         if name in _DATA_SD_TAGS:
             self.struct_gml.setDat_tag_name(name)
-            self.struct_gml.setDat_tag_value(''.join(self.__data_sd).strip())
-            #fill list
+            self.struct_gml.setDat_tag_value("".join(self.__data_sd).strip())
+            # fill list
             self.struct_gml.setDat_field()
-            #clean
-            self.struct_gml.setDat_tag_name('')
-            self.struct_gml.setDat_tag_value('')
+            # clean
+            self.struct_gml.setDat_tag_name("")
+            self.struct_gml.setDat_tag_value("")
             self.struct_gml.setDat_records()
             self.__data_sd = []
 
-        if name == 'gml:featureMember':
+        if name == "gml:featureMember":
             self.struct_gml.setDbf_records()
             self.struct_gml.resetDat_records()
 
-        self.__currentTag = ''
-        #END DBF data tags 
+        self.__currentTag = ""
+        # END DBF data tags
 
     def characters(self, content):
         currentTag = self.__currentTag
@@ -177,7 +179,7 @@ class gml_handler(ContentHandler):
 
 
 class gml_parser:
-    """ class for parse GML files """
+    """class for parse GML files"""
 
     def __init__(self):
         """ """
@@ -210,22 +212,30 @@ class gml_parser:
         except:
             pass
         inputsrc = InputSource()
-        
+
+        if isinstance(file, bytes):
+            file = file.decode("utf-8", "replace")
         if type(file) is StringType:
-            inputsrc.setByteStream(StringIO(file))
+            inputsrc.setCharacterStream(StringIO(file))
         else:
             filecontent = file.readline()
-            inputsrc.setByteStream(StringIO(filecontent))
+            if isinstance(filecontent, bytes):
+                filecontent = filecontent.decode("utf-8", "replace")
+            inputsrc.setCharacterStream(StringIO(filecontent))
         parser.parse(inputsrc)
         return chandler
-        
+
         try:
+            if isinstance(file, bytes):
+                file = file.decode("utf-8", "replace")
             if type(file) is StringType:
-                inputsrc.setByteStream(StringIO(file))
+                inputsrc.setCharacterStream(StringIO(file))
             else:
                 filecontent = file.readline()
-                inputsrc.setByteStream(StringIO(filecontent))
+                if isinstance(filecontent, bytes):
+                    filecontent = filecontent.decode("utf-8", "replace")
+                inputsrc.setCharacterStream(StringIO(filecontent))
             parser.parse(inputsrc)
             return chandler
         except:
-            return None    
+            return None

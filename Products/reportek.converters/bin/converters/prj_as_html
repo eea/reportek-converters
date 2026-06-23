@@ -5,7 +5,7 @@ if len(sys.argv) != 2:
     print("Needs a filename")
     sys.exit(2)
 
-prj = open(sys.argv[1], "rb")
+prj = open(sys.argv[1], "r", encoding="utf-8", errors="replace")
 
 print(
     """<html>

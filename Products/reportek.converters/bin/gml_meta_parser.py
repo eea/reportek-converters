@@ -24,11 +24,13 @@ __doc__ = """
 """
 
 
+from io import StringIO
+from xml.sax import *
 from xml.sax.handler import ContentHandler
-from xml.sax         import *
-from io       import StringIO
-from types           import StringType
-from .constants       import *
+
+StringType = str
+from .constants import *
+
 
 def meta_import(file):
     """ """
@@ -39,16 +41,16 @@ def meta_import(file):
     retMetaDict = chandler.getMetaData()
     for k in METADATA_LABELS:
         if not k in retMetaDict:
-            retMetaDict[k] = ''
+            retMetaDict[k] = ""
     return retMetaDict
 
+
 class meta_handler(ContentHandler):
-    """ This is used to parse the GML files
-    """
+    """This is used to parse the GML files"""
 
     def __init__(self):
-        """ constructor """
-        self.__currentTag = ''
+        """constructor"""
+        self.__currentTag = ""
         self.__data = []
         self.__retMetaDict = {}
 
@@ -61,15 +63,17 @@ class meta_handler(ContentHandler):
     def endElement(self, name):
 
         if name in METADATA_LABELS:
-            self.__retMetaDict[(''.join(name).strip())] = ''.join(self.__data).strip()
+            self.__retMetaDict[("".join(name).strip())] = "".join(
+                self.__data
+            ).strip()
 
         if name in PROJECTION_LABELS:
-            self.__retMetaDict[(''.join(name).strip())] = ''.join(self.__data).strip()
-
+            self.__retMetaDict[("".join(name).strip())] = "".join(
+                self.__data
+            ).strip()
 
         self.__data = []
-        self.__currentTag = ''
-
+        self.__currentTag = ""
 
     def characters(self, content):
         currentTag = self.__currentTag
@@ -77,9 +81,8 @@ class meta_handler(ContentHandler):
             self.__data.append(content)
 
 
-
 class meta_parser:
-    """ class for parse GML Metadata files """
+    """class for parse GML Metadata files"""
 
     def __init__(self):
         """ """
@@ -112,7 +115,7 @@ class meta_parser:
         except:
             pass
         inputsrc = InputSource()
-        
+
         if type(file) is StringType:
             inputsrc.setByteStream(StringIO(file))
         else:
@@ -120,7 +123,7 @@ class meta_parser:
             inputsrc.setByteStream(StringIO(filecontent))
         parser.parse(inputsrc)
         return chandler
-        
+
         try:
             if type(file) is StringType:
                 inputsrc.setByteStream(StringIO(file))
@@ -130,4 +133,4 @@ class meta_parser:
             parser.parse(inputsrc)
             return chandler
         except:
-            return None    
+            return None

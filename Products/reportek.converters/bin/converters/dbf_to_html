@@ -81,7 +81,7 @@ if __name__ == "__main__":
             "</html>"
         )
         output = template.render(
-            field_names=attrs, records=records, limited=limited
+            field_names=[attr.lower() for attr in attrs], records=records, limited=limited
         )
-        pretty_output = bs(output).prettify()
+        pretty_output = bs(output, features="lxml").prettify()
         sys.stdout.write(pretty_output)

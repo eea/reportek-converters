@@ -24,43 +24,46 @@ __doc__ = """
     GML schema definition parser module.
 """
 
-from .gml                import GMLStructure
-from xml.sax.handler    import ContentHandler
-from xml.sax            import *
-from io          import StringIO
-from types              import StringType
+from io import StringIO
+from xml.sax import *
+from xml.sax.handler import ContentHandler
 
-_DATA_TAGS = ['xs:element']
+from .gml import GMLStructure
+
+StringType = str
+
+_DATA_TAGS = ["xs:element"]
+
 
 def gml_sd_import(file):
-    """ gml_sd_import class """
+    """gml_sd_import class"""
 
     gml_sd_val = GMLStructure()
     parser = gml_sd_parser()
 
-    #parse the gml_sd information
+    # parse the gml_sd information
     chandler = parser.parseHeader(file, gml_sd_val)
     try:
         gml_obj = chandler.getGmlSdVal()
     except Exception:
-        raise Exception('GML schema is not valid')
+        raise Exception("GML schema is not valid")
 
-    #gml_obj = chandler.getGmlSdVal()
+    # gml_obj = chandler.getGmlSdVal()
 
-    #return an GMLStructure object with dbf structure information 
+    # return an GMLStructure object with dbf structure information
     return gml_obj
 
 
 class gml_sd_handler(ContentHandler):
-    """ This is used to parse the gml_sd files """
+    """This is used to parse the gml_sd files"""
 
     def __init__(self, gml_sd_val):
-        """ constructor """
+        """constructor"""
         self.gml_sd_val = gml_sd_val
-        self.__currentTag = ''
+        self.__currentTag = ""
         self.__data = []
         self.l_coord_marker = 0
-        self.__tagout=''
+        self.__tagout = ""
 
     def getdbfdata(self):
         return self.__dbfdata
@@ -69,75 +72,76 @@ class gml_sd_handler(ContentHandler):
         return self.gml_sd_val
 
     def startElement(self, name, attrs):
-        if name == 'xs:element':
+        if name == "xs:element":
             for elem in list(attrs.keys()):
-                if elem == 'name':
-                    self.gml_sd_val.setRec_name(attrs['name']) 
-        if name == 'xs:restriction':
+                if elem == "name":
+                    self.gml_sd_val.setRec_name(attrs["name"])
+        if name == "xs:restriction":
             for elem in list(attrs.keys()):
-                if elem == 'base':
-                    #clean 'xs:'
-                    type_tmp = attrs['base']
-                    type_tmp = type_tmp[-(len(type_tmp)-len('xs:')):]
+                if elem == "base":
+                    # clean 'xs:'
+                    type_tmp = attrs["base"]
+                    type_tmp = type_tmp[-(len(type_tmp) - len("xs:")) :]
                     self.gml_sd_val.setRec_type(type_tmp)
 
-        if name == 'xs:maxLength':
+        if name == "xs:maxLength":
             for elem in list(attrs.keys()):
-                if elem == 'value':
-                    self.gml_sd_val.setRec_leng(attrs['value']) 
-                    if self.gml_sd_val.getRec_type() == 'string':
+                if elem == "value":
+                    self.gml_sd_val.setRec_leng(attrs["value"])
+                    if self.gml_sd_val.getRec_type() == "string":
                         self.__tagout = 1
 
-        if name == 'xs:totalDigits':
+        if name == "xs:totalDigits":
             for elem in list(attrs.keys()):
-                if elem == 'value':
-                    self.gml_sd_val.setRec_leng(attrs['value'])
-                    if self.gml_sd_val.getRec_type() == 'integer':
+                if elem == "value":
+                    self.gml_sd_val.setRec_leng(attrs["value"])
+                    if self.gml_sd_val.getRec_type() == "integer":
                         self.__tagout = 1
 
-        if name == 'xs:fractionDigits':
+        if name == "xs:fractionDigits":
             for elem in list(attrs.keys()):
-                if elem == 'value':
-                    self.gml_sd_val.setRec_decc(attrs['value'])
+                if elem == "value":
+                    self.gml_sd_val.setRec_decc(attrs["value"])
                     self.__tagout = 1
 
         if self.__tagout == 1:
-            if self.gml_sd_val.getRec_decc() == '':
-               self.gml_sd_val.setRec_decc('0') 
+            if self.gml_sd_val.getRec_decc() == "":
+                self.gml_sd_val.setRec_decc("0")
             self.gml_sd_val.setRec_field()
-            self.gml_sd_val.setRec_type('') 
-            self.gml_sd_val.setRec_name('')
-            self.gml_sd_val.setRec_leng('')
-            self.gml_sd_val.setRec_decc('')
+            self.gml_sd_val.setRec_type("")
+            self.gml_sd_val.setRec_name("")
+            self.gml_sd_val.setRec_leng("")
+            self.gml_sd_val.setRec_decc("")
             self.gml_sd_val.setRec_dbf()
-            self.__tagout=0            
+            self.__tagout = 0
 
         self.__currentTag = name
 
     def endElement(self, name):
-        if name == 'xs:restriction':
-            if self.gml_sd_val.getRec_type() == 'string':
+        if name == "xs:restriction":
+            if self.gml_sd_val.getRec_type() == "string":
                 self.__tagout = 1
         if self.__tagout == 1:
-            if self.gml_sd_val.getRec_decc() == '':
-               self.gml_sd_val.setRec_decc('0') 
+            if self.gml_sd_val.getRec_decc() == "":
+                self.gml_sd_val.setRec_decc("0")
             self.gml_sd_val.setRec_field()
-            self.gml_sd_val.setRec_type('') 
-            self.gml_sd_val.setRec_name('')
-            self.gml_sd_val.setRec_leng('')
-            self.gml_sd_val.setRec_decc('')
+            self.gml_sd_val.setRec_type("")
+            self.gml_sd_val.setRec_name("")
+            self.gml_sd_val.setRec_leng("")
+            self.gml_sd_val.setRec_decc("")
             self.gml_sd_val.setRec_dbf()
-            self.__tagout=0
+            self.__tagout = 0
 
-        self.__currentTag = ''
+        self.__currentTag = ""
 
     def characters(self, content):
         currentTag = self.__currentTag
         if currentTag in _DATA_TAGS:
             self.__data.append(content)
 
+
 class gml_sd_parser:
-    """ Class for parse gml_sd files """
+    """Class for parse gml_sd files"""
 
     def __init__(self):
         """ """

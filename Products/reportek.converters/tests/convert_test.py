@@ -23,7 +23,7 @@ class ConvertTest(unittest.TestCase):
 
     def test_converters(self):
         from convert import converters, Converter
-        converter = Converter('rar2list', 'unrar l {0}', mime_types.get('rar'))
+        converter = Converter('rar2list', 'lsar {0}', mime_types.get('rar'))
         self.assertEqual(converter.command, converters['rar2list'].command)
 
     @patch('convert.json')
