@@ -36,10 +36,6 @@ def _run_script(relative_path):
     runpy.run_path(script_path, run_name="__main__")
 
 
-def flash_ext_png():
-    _run_module("bin.flash_ext_png")
-
-
 def gdal_export_png():
     _run_module("bin.gdal_export_png")
 
@@ -54,10 +50,6 @@ def gml_to_png_bg():
 
 def gml_to_png_thumbnail_bg():
     _run_module("bin.gml_to_png_thumbnail_bg")
-
-
-def gml_to_shp():
-    _run_module("bin.gml_to_shp")
 
 
 def mmr_p_xls_xml():

@@ -1,3 +1,10 @@
+1.2.10 (2026-06-24)
+-------------------
+* remove: obsolete Flash converters and entry points
+* remove: obsolete legacy MS Office converters based on wv/old xls/ppt tooling
+* remove: obsolete GML-to-SHP/shapelib converter and inactive legacy GML scripts
+* remove: unused legacy converter helper scripts, vendored GDAL wrappers, MapServer assets, and duplicate txt_to_wkt script
+
 1.2.9 (2026-06-23)
 ------------------
 * fix: clean metadata from xml in xml_to_json

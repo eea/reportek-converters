@@ -23,12 +23,10 @@ setup(name=NAME,
       entry_points={
           'console_scripts': [
               'reportek-dbf-to-html=reportek_converter_runner:dbf_to_html',
-              'reportek-flash-ext-png=reportek_converter_runner:flash_ext_png',
               'reportek-gdal-export-png=reportek_converter_runner:gdal_export_png',
               'reportek-gml-to-kml=reportek_converter_runner:gml_to_kml',
               'reportek-gml-to-png-bg=reportek_converter_runner:gml_to_png_bg',
               'reportek-gml-to-png-thumbnail-bg=reportek_converter_runner:gml_to_png_thumbnail_bg',
-              'reportek-gml-to-shp=reportek_converter_runner:gml_to_shp',
               'reportek-mmr-p-xls-xml=reportek_converter_runner:mmr_p_xls_xml',
               'reportek-prj-as-html=reportek_converter_runner:prj_as_html',
               'reportek-safe-html=reportek_converter_runner:safe_html',

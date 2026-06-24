@@ -169,32 +169,11 @@ class WebTest(unittest.TestCase):
     def test_gmltopng_thumb(self):
         self.assertResponse('PNG', 'tests/gml_data/world.gml')
 
-    def test_msxls2html(self):
-        self.assertResponse('test file', 'tests/xls_data/test.xls')
-
-    def test_vndmsxls2html(self):
-        self.assertResponse('test file', 'tests/xls_data/test.xls')
-
-    def test_xsl2html(self):
-        self.assertResponse('test file', 'tests/xls_data/test.xls')
-
-    def test_ppt2html(self):
-        self.assertResponse('pptHtml', 'tests/ppt_data/test.ppt')
-
-    def test_vndmsppt2html(self):
-        self.assertResponse('pptHtml', 'tests/ppt_data/test.ppt')
-
     def test_ziplist(self):
         self.assertResponse('fisier.txt', 'tests/zip_data/test.zip')
 
-    def test_msword2text(self):
-        self.assertResponse('test .doc file', 'tests/doc_data/test.doc')
-
     def test_accesstables(self):
         self.assertResponse('Purchases', 'tests/mdb_data/test.mdb')
-
-    def test_msword2html(self):
-        self.assertResponse('test .doc file', 'tests/doc_data/test.doc')
 
     def test_pdftohtml(self):
         self.assertResponse('Flask', 'tests/pdf_data/sample.pdf')
@@ -204,19 +183,6 @@ class WebTest(unittest.TestCase):
 
     def test_ods2html(self):
         self.assertResponse('test file', 'tests/ods_data/test.ods')
-
-    @unittest.skip('broken converter?') #NOTE ask about it
-    def test_flash_ext_png(self):
-        data = dict(minx=None, miny=None, maxx=None, maxy=None, server=None, service=None)
-        self.assertResponse('PNG', 'tests/gml_data/world.gml', extra_params=data)
-
-    @unittest.skip('wrong command?') #NOTE ask about it
-    def test_gmltoflash(self):
-        self.assertResponse('test file', 'tests/ods_data/test.ods')
-
-    @unittest.skip('command needs a schema') #TODO implement later
-    def test_gmltoshp(self):
-        self.assertResponse('test file', 'tests/gml_data/world.gml')
 
     def test_gmltokml(self):
         self.assertResponse('<kml', 'tests/gml_data/world.gml')
