@@ -187,18 +187,10 @@ class WebTest(unittest.TestCase):
     def test_gmltokml(self):
         self.assertResponse('<kml', 'tests/gml_data/world.gml')
 
-    @unittest.skip('the script hangs on a post request')
-    def test_gmltopng_thumb_bg(self):
-        self.assertResponse('PNG', 'tests/gml_data/world.gml', extra_params=['AT'])
-
     def test_gmltopng(self):
         self.assertResponse('PNG', 'tests/gml_data/world.gml')
 
     def test_gmltopng_thumb(self):
-        self.assertResponse('PNG', 'tests/gml_data/world.gml')
-
-    @unittest.skip('command needs a country') #TODO implement later
-    def test_gmltopng_bg(self):
         self.assertResponse('PNG', 'tests/gml_data/world.gml')
 
     def test_rar2list(self):

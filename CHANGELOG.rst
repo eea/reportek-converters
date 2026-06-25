@@ -1,3 +1,8 @@
+1.2.11 (2026-06-25)
+-------------------
+* remove: obsolete GML background PNG converters that depended on unavailable ARC IMS service
+* remove: unused IMS/background-map scripts and constants after dropping GML background converters
+
 1.2.10 (2026-06-24)
 -------------------
 * remove: obsolete Flash converters and entry points

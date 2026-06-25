@@ -44,14 +44,6 @@ def gml_to_kml():
     _run_module("bin.gml_to_kml")
 
 
-def gml_to_png_bg():
-    _run_module("bin.gml_to_png_bg")
-
-
-def gml_to_png_thumbnail_bg():
-    _run_module("bin.gml_to_png_thumbnail_bg")
-
-
 def mmr_p_xls_xml():
     _run_module("bin.mmr_p_xls_xml")
 
