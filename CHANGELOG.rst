@@ -1,3 +1,7 @@
+1.2.12 (2026-06-25)
+-------------------
+* fix: fixed regression in xml_to_json for ods
+
 1.2.11 (2026-06-25)
 -------------------
 * remove: obsolete GML background PNG converters that depended on unavailable ARC IMS service

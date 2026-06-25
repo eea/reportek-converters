@@ -33,30 +33,29 @@ def clean_metadata(value):
 
     Serialising a selected subtree can add namespace declarations such as
     ``xmlns:xsi`` to the subtree root. xmltodict exposes those declarations as
-    ``@xmlns`` keys, but Reportek metadata consumers expect the old clean shape
-    without namespace bookkeeping.
+    ``@xmlns`` keys. Remove that parser bookkeeping, but keep real XML
+    attributes such as ``valid=\"true\"`` because Reportek's ODS metadata code
+    expects ``{"@valid": "true", "#text": "2025"}`` for those nodes.
+
+    If removing ``@xmlns`` leaves only ``#text``, collapse to the scalar text
+    value. This restores the old shape for namespace-only leaf nodes.
     """
     if isinstance(value, dict):
-        return {
+        cleaned = {
             key: clean_metadata(item)
             for key, item in value.items()
             if key != "@xmlns"
         }
+        if set(cleaned) == {"#text"}:
+            return cleaned["#text"]
+        return cleaned
     if isinstance(value, list):
         return [clean_metadata(item) for item in value]
     return value
 
 
 def node_to_dict(node):
-    """Convert an XML node to the metadata shape expected by Reportek.
-
-    Leaf nodes should become scalar values even if namespace declarations are
-    present, otherwise metadata consumers such as get_transaction_year() receive
-    a dict and fail when coercing the year to int.
-    """
-    tag = etree.QName(node).localname
-    if len(node) == 0:
-        return {tag: (node.text or "")}
+    """Convert an XML node to the metadata shape expected by Reportek."""
     return clean_metadata(
         xmltodict.parse(etree.tostring(node), process_namespaces=True)
     )

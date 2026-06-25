@@ -17,14 +17,27 @@ class XmlToJsonTest(unittest.TestCase):
         finally:
             os.unlink(tmp_path)
 
-    def test_selected_leaf_nodes_are_scalars_even_with_attributes(self):
+    def test_selected_leaf_nodes_without_real_attributes_are_scalars(self):
         result = self.convert(
-            '<Root><Alpha code="x">2024</Alpha><Beta>two</Beta></Root>',
+            '<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+            '<Alpha>2024</Alpha><Beta>two</Beta>'
+            '</Root>',
             ["//Alpha", "//Beta"],
         )
 
         self.assertEqual({"Alpha": "2024"}, result["//Alpha"][0])
         self.assertEqual({"Beta": "two"}, result["//Beta"][0])
+
+    def test_selected_leaf_nodes_with_real_attributes_keep_text_marker(self):
+        result = self.convert(
+            '<Root><Alpha valid="true">2024</Alpha></Root>',
+            ["//Alpha"],
+        )
+
+        self.assertEqual(
+            {"Alpha": {"@valid": "true", "#text": "2024"}},
+            result["//Alpha"][0],
+        )
 
     def test_selected_parent_nodes_keep_nested_structure(self):
         result = self.convert(
